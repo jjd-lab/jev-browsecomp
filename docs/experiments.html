@@ -150,6 +150,10 @@
   .step { padding: 0.15rem 0.6rem; border: 1px solid var(--line); border-radius: 999px; background: var(--surface); white-space: nowrap; }
   .step.jev { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); font-weight: 500; }
   .arrow { color: var(--muted); }
+  .held { margin-top: 1.5rem; }
+  .compare.held td, .compare.held thead th { width: 3.4rem; padding-left: 0.25rem; padding-right: 0.25rem; white-space: normal; }
+  .held .group th { padding: 1.4rem 0 0.4rem; font-size: 0.8rem; font-weight: 600; color: var(--muted); border-bottom: 1px solid var(--line); }
+  .held td.ideal, .held th.ideal { color: var(--muted); font-weight: 400; }
   .note { margin-top: 1.25rem; max-width: 42rem; font-size: 0.95rem; color: var(--muted); }
   .tables { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 1.5rem; }
   .compare caption { text-align: left; font-weight: 600; font-size: 0.95rem; padding-bottom: 0.4rem; }
@@ -282,28 +286,28 @@
 
   <section id="held-out">
     <h2>When no document has the answer</h2>
-    <p class="lede">A useful system should say it cannot tell rather than guess. To test this, we took 50 more questions and swapped the documents that answer them for random ones. Nothing in the 1,000 documents supports an answer, so the right move is to decline. An answer the judge marks correct still came from the model's memory, not the documents.</p>
-    <div class="tables">
-      <table class="compare">
-        <caption>The same 30 held-out questions</caption>
-        <thead><tr><th></th><th class="num">Plain RLM</th><th class="num">Jev reader</th></tr></thead>
-        <tbody>
-          <tr><th scope="row">Declined</th><td class="num">19</td><td class="num">25</td></tr>
-          <tr><th scope="row">No answer</th><td class="num">3</td><td class="num">0</td></tr>
-          <tr><th scope="row">Gave an answer</th><td class="num">8</td><td class="num">5</td></tr>
-          <tr><th scope="row">Stated confidence 50% or more</th><td class="num">0</td><td class="num">2</td></tr>
-          <tr><th scope="row">Jev check 0.5 or more</th><td class="num">0</td><td class="num">1</td></tr>
-          <tr><th scope="row">Correct from memory</th><td class="num">2</td><td class="num">1</td></tr>
-          <tr><th scope="row">Cost per question</th><td class="num">$1.19</td><td class="num">$0.14</td></tr>
-          <tr><th scope="row">Median time</th><td class="num">276 s</td><td class="num">16 s</td></tr>
-        </tbody>
-      </table>
-    </div>
+    <p class="lede">We took 50 more questions and swapped out the documents that answer them. Nothing left supports an answer, so the right move is to decline.</p>
+    <table class="compare held">
+      <caption>The same 30 held-out questions</caption>
+      <thead><tr><th></th><th class="num ideal">Ideal</th><th class="num">Plain RLM</th><th class="num">Jev reader</th></tr></thead>
+      <tbody>
+        <tr class="group"><th colspan="4">What each method did</th></tr>
+        <tr><th scope="row">Said the documents cannot answer</th><td class="num ideal">30</td><td class="num">19</td><td class="num">25</td></tr>
+        <tr><th scope="row">Stopped with no reply</th><td class="num ideal">0</td><td class="num">3</td><td class="num">0</td></tr>
+        <tr><th scope="row">Answered anyway</th><td class="num ideal">0</td><td class="num">8</td><td class="num">5</td></tr>
+        <tr class="group"><th colspan="4">Of the answers given anyway</th></tr>
+        <tr><th scope="row">Sonnet said it was 50% or more sure</th><td class="num ideal">0</td><td class="num">0</td><td class="num">2</td></tr>
+        <tr><th scope="row">Jev check wrongly said supported</th><td class="num ideal">0</td><td class="num">0</td><td class="num">1</td></tr>
+        <tr><th scope="row">Right, but from memory</th><td class="num ideal">0</td><td class="num">2</td><td class="num">1</td></tr>
+        <tr class="group"><th colspan="4">Per question</th></tr>
+        <tr><th scope="row">Cost</th><td class="num ideal"></td><td class="num">$1.19</td><td class="num">$0.14</td></tr>
+        <tr><th scope="row">Median time</th><td class="num ideal"></td><td class="num">276 s</td><td class="num">16 s</td></tr>
+      </tbody>
+    </table>
     <ul class="points">
-      <li>Both mostly decline. The Jev reader declines more often, at about 1/8 of the cost. The plain RLM searches for about 4.6 minutes before it gives up; the Jev reader decides from one look at 8 documents.</li>
-      <li>The Jev reader's two confident answers: one came from Sonnet's memory, and the Jev check scored it 0.06. The other was wrong, built on a document that fit some of the clues, and the Jev check scored it 0.55, so Jev was fooled too.</li>
-      <li>On all 50, the Jev reader declined 37, answered 8, and gave no answer on 5, where Sonnet spent its whole output budget reasoning.</li>
-      <li>Why this matters for Jev: Jev screen has scored every document before Sonnet is called. When no document scores high, a system could decline without calling Sonnet at all, which is cheaper and avoids answers from memory. We have not tested this. These runs did not save the scores, and Sonnet never saw them.</li>
+      <li>The Jev reader declined more often, at 1/8 of the cost. Across all 50, it declined 37.</li>
+      <li>The same Jev check ran on both methods. On the Jev reader's two confident answers, it caught the one from memory (0.06) and missed the wrong one (0.55).</li>
+      <li>Untested idea: Jev screen scores every document before Sonnet runs, so when none scores high, a system could decline without calling Sonnet. These runs did not save the scores.</li>
     </ul>
   </section>
 
