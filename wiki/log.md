@@ -38,6 +38,3 @@ The three Claude bugs in rlms 0.1.3 stay documented, with the local workarounds.
 
 ## [2026-09-25] decision | Publish from a new repo built by an export
 Reverses "This repository is the public one": GitHub keeps `refs/pull/N/head` after a force-push, so a history rewrite cannot hide the fixtures. `scripts/export_public.py` builds the public tree outside the repo and `scripts/scan_public.py` fails it on benchmark text, private paths, unstripped rows, or a stray canary. Pack-dependent tests skip when the pack is absent (`needs_pack`); LICENSE is Apache-2.0. Pages: `docs/before-public.md`, `index.md`.
-
-## [2026-09-26] ingest | Experiments page rewrite and public site
-`docs/experiments.html` explains Jev screen and decide with a made-up example, calls harness v1/v2 the "first setup" and "fixed setup", drops the Haiku and Sonnet pilots, adds "Why an RLM, and how the numbers compare" (the RLM paper's 1K-doc results as context, not ranked against ours), and compares arms A and J on the same 30 held-out questions. Public copy pushed to `jjd-lab/jev-browsecomp`; site at https://jjd-lab.github.io/jev-browsecomp/. Pages: `index.md`, `docs/before-public.md`, `docs/glossary.md`.

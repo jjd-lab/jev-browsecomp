@@ -374,10 +374,8 @@
     <h2>Limitations</h2>
     <ul class="points">
       <li><b>Scale.</b> Jev screen scores every document, so its cost grows with the number of documents. At 1,000 documents it was $0.09 of the reader's $0.13 per question. At 100,000 documents it would be about $9. A larger corpus needs a cheap first search, by keywords or embeddings, to cut it to about 1,000 documents before Jev. Jev can only pick from what that search keeps, and we have not tested this at that scale.</li>
-      <li><b>An easy haystack.</b> Each question's 1,000 documents always include its answer documents, and the rest are random. In a real corpus, many documents can look close to the answer, which would make both searching and screening harder.</li>
+      <li><b>An easy, small test.</b> Each question's 1,000 documents always include its answer documents, and the rest are random. In a real corpus, many documents can look close to the answer, which would make both searching and screening harder. The sample is also small: 100 main and 30 to 50 held-out questions, one run each, scored by a Sonnet 5 judge. Rerunning moves counts by about 3.</li>
       <li><b>No other retriever.</b> We compared Jev screen with BM25 keyword ranking only. An embedding retriever might also put the answer documents in the top 8.</li>
-      <li><b>Stated confidence is self-reported.</b> Sonnet writes its own confidence as asked by the benchmark's answer format. On 2 of the 30 shared held-out questions, the reader answered at 50% or more with no supporting document.</li>
-      <li><b>Small samples.</b> 100 main and 30 to 50 held-out questions, one run each, scored by a Sonnet 5 judge. Rerunning moves counts by about 3.</li>
     </ul>
   </section>
 </main>
