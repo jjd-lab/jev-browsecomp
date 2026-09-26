@@ -3,7 +3,7 @@ type: architecture
 title: Harness architecture
 description: How the must-cite harness is built, from the Phase 0 arms to the Phase 1 RLM with Jev tools.
 tags: [architecture, jev, rlm, browsecomp-plus]
-timestamp: 2026-09-25
+timestamp: 2026-09-26
 ---
 
 # Harness architecture
@@ -51,7 +51,7 @@ The setting follows the RLM paper (Zhang, Kraska, Khattab, arXiv 2512.24601): ea
 - Jev tools run as code in the container and POST to a host proxy bound to `127.0.0.1`, so the Typesafe key never enters the container. Screens run 8 batches at a time (1,000 docs in about 12 s).
 - The answer uses BrowseComp-Plus's format (Explanation with `[docid]` cites / Exact Answer / Confidence). A `claude-sonnet-5` judge grades it with the benchmark's template.
 - Held-out set: questions 101–150 with their gold and evidence docs swapped for random corpus docs, so nothing in the 1,000 supports an answer. The right behavior is to decline, and every answer counts as should-not-act. RLM arm A and reader arm J both run on it. For arm A, Jev only runs the Jev check. For arm J, the Jev screen also decides what Sonnet reads.
-- The Jev check (code: `verify_gate`, stored as `gate_post`) runs the same way on every arm after the answer exists: a Choice on "do the cited docs support this proposed answer?" plus a Noul per cited doc. Each doc is shown as the window around the answer.
+- The Jev check (code: `verify_gate`, stored as `gate_post`) runs the same way on every arm after the answer exists: a Choice on "do the cited docs support this proposed answer?", whose p(act) is the score. Each doc is shown as the window around the answer. The Phase 1 runs also asked a Noul per cited doc (stored as `support`); nothing read it, so the check no longer asks it.
 - Harness v2: a 30-turn cap, a per-question token cap (`--max-tokens`), and a no-code final turn.
 - The local patches to rlms 0.1.3 are listed in [conventions](conventions.md).
 

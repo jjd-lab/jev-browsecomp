@@ -3,7 +3,7 @@ type: reference
 title: Glossary
 description: One name per thing. Use these terms in findings, wiki pages, commits, and the storyline.
 tags: [glossary, terms, conventions]
-timestamp: 2026-09-25
+timestamp: 2026-09-26
 ---
 
 # Glossary
@@ -54,7 +54,7 @@ Letters repeat across phases, so always name the family: "pack arm C", "RLM arm 
 | Choice | A Jev question with a categorical answer and its probabilities. |
 | Jev screen | One Noul per doc, used to rank docs. Arms R, H, B (as a tool), and J. |
 | Jev decide | A route Choice (act / review / abstain) plus one Noul per candidate; on act, cite the top Noul. Pack arms, corpus arms, and RLM arm B (as a tool). |
-| Jev check | After an answer exists: "do the cited docs support this proposed answer?" (a Choice plus one Noul per cited doc). Applied the same way to every Phase 1 arm; never shown to the model. The code calls it the gate (`verify_gate`, `gate_post`). |
+| Jev check | After an answer exists: "do the cited docs support this proposed answer?" (a Choice; its p(act) is the score. The Phase 1 runs also asked one Noul per cited doc, since dropped as unused). Applied the same way to every Phase 1 arm; never shown to the model. The code calls it the gate (`verify_gate`, `gate_post`). |
 | p(act) | The probability of the act route in a Choice. The Jev check's score. |
 
 ## Outcomes and metrics

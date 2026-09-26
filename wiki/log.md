@@ -38,3 +38,6 @@ The three Claude bugs in rlms 0.1.3 stay documented, with the local workarounds.
 
 ## [2026-09-25] decision | Publish from a new repo built by an export
 Reverses "This repository is the public one": GitHub keeps `refs/pull/N/head` after a force-push, so a history rewrite cannot hide the fixtures. `scripts/export_public.py` builds the public tree outside the repo and `scripts/scan_public.py` fails it on benchmark text, private paths, unstripped rows, or a stray canary. Pack-dependent tests skip when the pack is absent (`needs_pack`); LICENSE is Apache-2.0. Pages: `docs/before-public.md`, `index.md`.
+
+## [2026-09-26] decision | Jev check asks only the Choice
+`verify_gate` drops the per-cited-doc Nouls and no longer returns `support`; the analysis only read p(act). Phase 1 rows keep their recorded `support`. Pages: `docs/architecture.md`, `docs/glossary.md`.
