@@ -235,6 +235,49 @@ The co-primary counts every held-out row as should-not-act and compares Jev p(ac
 
 Stated confidence still wins, but declines widen the gap by about a third. The main-question AUROC (0.87 vs 0.93) has the same issue on a small scale: 2 of its 9 wrong rows are declines, one scored 0.50 by Jev. The result of record is unchanged. A fairer protocol skips the Jev check on declines, or asks Jev a separate question for them, such as whether the docs contain the answer at all.
 
+## Answerability check: can Jev tell when to abstain? (rules set before the run, 2026-09-26)
+
+Why: the Jev check asks whether the cited docs support a given answer, which is the wrong question for a decline (see the caveat above). This asks Jev the abstain question directly, before any answer exists.
+
+Setup, fixed before any call:
+
+- Rows: reader arm J's 100 main and 50 held-out questions. Docs: each row's recorded 8-doc `shortlist`, each cut to its first PROMPT_CHARS (12,000) characters, the same text Sonnet read.
+- One Jev Choice per question, `answerable`: "Do these documents contain enough information to answer the question?" Criteria: `yes` (the documents together contain the answer), `partly` (they contain some of the clues but not the answer), `no` (they do not contain the answer). Score: p(yes).
+- No Sonnet call, no judge, no change to any recorded row. Output: `results/phase1_rlm/J.answerable.jsonl` (id, set, p(yes), probabilities, choice, cost). Script: `scripts/answerable_jev.py`.
+- Input cap: on a Jev error, halve every doc's text and retry, up to 3 times (as `_decide_fitting`); record the halvings per row. Transient errors retry with backoff. Cap: $2.
+
+Measures:
+
+1. Primary: AUROC of p(yes) separating main questions (should answer) from held-out questions (should decline).
+2. At the fixed rule "decline when p(yes) < 0.5": held-out questions declined (of 50), and main questions reader arm J got right that would be declined (of 94).
+3. Context, same two counts for Sonnet's own behavior on the same rows: held-out it declined or answered under 50%, and correct main answers under 50%.
+4. Main questions with no gold doc in the top 8 (6 of 100) are reported separately; there, declining is arguably right.
+
+The threshold is 0.5 and is not tuned. The full p(yes) distribution is reported, so other thresholds can be read off it, as exploratory.
+
+### Answerability check result (2026-09-26)
+
+150 questions, $0.092 in Jev, no halvings, no errors. Jev chose yes on 93, partly on 3, no on 54.
+
+1. Primary: AUROC of p(yes), main vs held-out, **0.984**. Main median p(yes) 0.89 (quartiles 0.67–0.97); held-out median 0.06 (0.03–0.13, max 0.39).
+2. Rule p(yes) < 0.5: declines **50 of 50** held-out questions and **10 of 94** main questions reader arm J got right.
+3. Sonnet on the same rows: declined or answered under 50% on 47 of 50 held-out, and never went under 50% on a correct main answer (0 of 94). Its 3 held-out answers at 50% or more (55%, 62%, 78%) got p(yes) 0.05, 0.11, and 0.39, so the rule declines all three.
+4. Main questions with no gold doc in the top 8: p(yes) 0.36, 0.11, 0.98, 0.36, 0.14, 0.83. The rule declines 4 of 6, including 1 that Sonnet got right from non-gold evidence.
+
+Trade-off at other thresholds (exploratory, read off the recorded p(yes)):
+
+| Decline when p(yes) < | Held-out declined (of 50) | Correct main answers lost (of 94) |
+| ---: | ---: | ---: |
+| 0.1 | 31 | 0 |
+| 0.2 | 41 | 2 |
+| 0.3 | 47 | 4 |
+| 0.4 | 50 | 6 |
+| 0.5 | 50 | 10 |
+
+Read: asked the abstain question directly, Jev separates answerable from unanswerable shortlists almost perfectly (0.984), for about $0.0006 a question and before Sonnet runs. It catches the confident held-out answers Sonnet made. The price at the fixed 0.5 rule is 10 of 94 correct answers, which would take reader arm J from 0.94 to 0.84; lower thresholds trade fewer losses for fewer held-out catches. Sonnet alone loses none but lets 3 confident unsupported answers through.
+
+Caveat: the held-out set is easy for this test. Its gold and evidence docs were replaced with random corpus docs, so its top 8 is plainly off-topic. Real unanswerable questions would have near-miss documents, and separation would be lower. This measures the signal, not a deployed gate; no Sonnet call was skipped.
+
 ## Reader arm K: BM25 reader control (rules set before the run, 2026-09-25)
 
 Why: in the 1K set, the ~9 gold and evidence docs sit among ~990 random corpus docs, so plain lexical retrieval may already find them. If BM25 top 8 plus one Sonnet call matches reader arm J, the reader arm J result means "skip the RLM", not "use Jev". Jev is two-thirds of reader arm J's cost.
