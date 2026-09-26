@@ -3,7 +3,7 @@ type: experiment
 title: Experiment ledger
 description: Every finished experiment, with its size, what Jev was compared against, the result, and the lesson.
 tags: [experiments, browsecomp-plus, jev, rlm]
-timestamp: 2026-09-25
+timestamp: 2026-09-26
 ---
 
 # Experiment ledger
@@ -21,6 +21,7 @@ Check two things before reading a result as evidence about Jev: how large the ru
 | 1K set, Jev inside the RLM | 1.3, 1.6 | 100 q × 1,000 docs (≈ 8M tokens) | accuracy | RLM arm A (Sonnet 5 alone) | Accuracy tie; RLM arm B costs more |
 | 1K set, Jev check | 1.4, 1.9 | 100 main + 20–30 held-out q | error ranking | Sonnet's stated confidence | Stated confidence wins |
 | 1K set, Jev in front of one call | 1.7, 1.8, 1.10 | 100 main + 50 held-out q | accuracy, $, time; gold in top 8 | RLM arm A; BM25 ranking | Same accuracy at 38% of the cost and 1/7 of the time; Jev's top 8 holds gold on 94/100 vs BM25's 49/100 |
+| 1K set, Jev answerability check | 1.11 | 100 main + 50 held-out q | main vs held-out separation | Sonnet's own declines and stated confidence | Jev separates them (AUROC 0.984) and catches Sonnet's 3 confident held-out answers, at a cost of 10/94 correct answers at p(yes) < 0.5 |
 | Pilots and probes | 1.1, 1.2, 1.5 | 10–22 q | mixed | — | Direction only |
 
 Until reader arm J (1.7, 1.8), every Jev win was against a weaker comparator. Scale does not separate wins from losses: the Jev screen held up on the full corpus (0.6). What matters is the comparator and where Jev sits. Inside the RLM loop, Jev adds cost without adding accuracy (1.3, 1.6). In front of a single Sonnet call, it holds accuracy at a fraction of the cost (1.8), and the Jev screen is why (1.10). Phase 0 wins measure gold cited; Phase 1 results measure accuracy.
@@ -59,6 +60,7 @@ Stated confidence is the number Sonnet writes after "Confidence:", not a logprob
 | 1.8 | Reader arm J vs RLM arm A, full run on 100 main q; J on 50 held-out q | Accuracy 0.94 vs 0.91 with harness v2 (+3 points, 95% CI −3 to +9) or 0.94 with v1 (tie); $0.13 vs $0.35/q; 21 vs 143 s; the same on the 62 questions outside the probe. Held-out: J declined on 37 of 50 | Arm J wins on cost and time; accuracy the same | The Jev screen in front of one Sonnet call replaces the RLM's search loop. |
 | 1.9 | Jev check vs stated confidence, RLM arm A's 100 main + held-out answers | 20 held-out: AUROC 0.910 vs 0.955, Δ AURC +0.016 [+0.003, +0.037]. 30 held-out (extension): 0.912 vs 0.958 | Stated confidence wins | Sonnet 5 doesn't answer confidently when no document supports an answer, so the Jev check has little to catch. |
 | 1.10 | BM25 control: does BM25's top 8 hold a gold doc? (free, no API calls; reader arm K not run) | BM25 49/100 vs Jev 94/100 (hard 10 vs 23, easy 39 vs 71); Jev only 46, BM25 only 1 | The Jev screen is what makes reader arm J work | BrowseComp questions are indirect clues, and keyword ranking misses them even in the 1K set. This is retrieval, not accuracy; an embedding retriever is the untested control. |
+| 1.11 | Answerability check: one Jev Choice per question ("do these documents contain enough information to answer?"; score p(yes)) over reader arm J's recorded top 8; no Sonnet call | AUROC 0.984 main vs held-out (median p(yes) 0.89 vs 0.06). At p(yes) < 0.5: declines 50/50 held-out, loses 10/94 correct main answers; Sonnet alone 47/50 and 0/94. $0.092 total | Jev can tell when to abstain, on this held-out set | Ask Jev the abstain question before the answer, not the check question after it. The held-out top 8 is random off-topic docs; real unanswerable questions have near misses, so separation would be lower. Measures the signal, not a deployed gate. |
 
 ### Phase 1 runs at a glance
 
@@ -68,6 +70,7 @@ Stated confidence is the number Sonnet writes after "Confidence:", not a logprob
 | Reader | reader arm J vs RLM arm A | main 1–100 | Jev screen in front of one Sonnet call | same accuracy, 38% of the cost, 1/7 of the time (1.8) |
 | BM25 control | reader arm K (not run) | main 1–100 | none | free recall check: BM25's top 8 holds gold on 49/100 vs Jev's 94/100 (1.10) |
 | Held-out | RLM arm A (30) and reader arm J (50) | held-out 101–150 | A: Jev check only; J: Jev screen plus Jev check | both mostly abstain (same 30: A declined 19 and gave no answer on 3, J declined 25); J costs ~1/8; the Jev check does not beat stated confidence (1.9) |
+| Answerability check | reader arm J's recorded top 8 (no Sonnet call) | main 1–100 + held-out 101–150 | one Choice: can these docs answer? | AUROC 0.984 main vs held-out; p(yes) < 0.5 declines 50/50 held-out and 10/94 correct main answers (1.11) |
 
 The full run map (question ranges, n, harness, cost, files) is at the top of [`results/findings/phase1_rlm.md`](../../results/findings/phase1_rlm.md).
 

@@ -44,3 +44,6 @@ Reverses "This repository is the public one": GitHub keeps `refs/pull/N/head` af
 
 ## [2026-09-26] review | The Jev check also scored declines
 Declines that cite docs got a Jev check; Jev often agreed the docs support "cannot be determined", and the co-primary counted that against it. With held-out declines left out, AUROC is 0.913 vs 0.944 instead of 0.912 vs 0.958; the result of record stands. Pages: `results/findings/phase1_rlm.md`, `docs/experiments.html`.
+
+## [2026-09-26] ingest | Answerability check
+Ledger row 1.11 (plus at-a-glance rows): one Jev Choice per question over reader arm J's top 8 separates main from held-out at AUROC 0.984; at p(yes) < 0.5 it declines 50/50 held-out and loses 10/94 correct answers. Glossary row "Answerability check", distinct from the Jev check. Pages: `docs/experiments.md`, `docs/glossary.md`; `results/FINDINGS.md` status.

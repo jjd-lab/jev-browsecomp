@@ -2,7 +2,7 @@
 
 This is the live tracker: status, locks, and where each result is recorded. Update it when a run finishes or a locked decision changes. Durable knowledge lives in [`wiki/`](../wiki/index.md): how the harness works, conventions, the experiment ledger, and the [glossary](../wiki/docs/glossary.md).
 
-## Status (2026-09-25)
+## Status (2026-09-26)
 
 Nothing is running. All planned Phase 1 runs are finished.
 
@@ -11,6 +11,7 @@ Nothing is running. All planned Phase 1 runs are finished.
 - On held-out questions (no supporting document), both arms mostly abstain. On the same 30: RLM arm A declined 19 and gave no answer on 3; reader arm J declined 25. Arm J declined on 37 of all 50.
 - RLM arm B (Jev tools inside the loop) vs arm A: accuracy 0.90 vs 0.91, no clear difference; cost $0.42 vs $0.35 per question, arm B worse.
 - The Jev check does not beat Sonnet's stated confidence at ranking errors: AUROC 0.910 vs 0.955 with 20 held-out questions, 0.912 vs 0.958 with 30.
+- Asked the abstain question directly (the answerability check, before any answer), Jev separates main from held-out questions on reader arm J's top 8: AUROC 0.984. At p(yes) < 0.5 it declines 50/50 held-out and loses 10/94 correct main answers; Sonnet alone declines 47/50 and loses 0/94. The held-out top 8 is random off-topic docs, so this is an easy case.
 
 The Phase 1 page is [`docs/experiments.html`](../docs/experiments.html). Untested options: an embedding-retriever control, reader arm K, the reader variants (`--show-jev-scores`, `--jev-reject-below`, `--reader-max-output`), and Jev-ranked context under the RLM.
 
@@ -20,7 +21,7 @@ The Phase 1 page is [`docs/experiments.html`](../docs/experiments.html). Unteste
 | --- | --- | --- | --- |
 | [`findings/phase0_pack.md`](findings/phase0_pack.md) | Hotpot slice; BC+ pack (150 q × ~9 docs) | Haiku as decider; BM25 | Pack arms, suite, timeline, decode ablation, steps 1–4 |
 | [`findings/phase0_corpus.md`](findings/phase0_corpus.md) | Full corpus (100,195 docs) | Flat BM25; Haiku writing searches | Steps 5–7: corpus read, corpus arms R, H, N |
-| [`findings/phase1_rlm.md`](findings/phase1_rlm.md) | 1K set (100 main + 50 held-out q) | Sonnet 5 RLM; BM25 ranking | Run map, pilots, rules, main run, probes, harness v2, reader arms, held-out, extensions |
+| [`findings/phase1_rlm.md`](findings/phase1_rlm.md) | 1K set (100 main + 50 held-out q) | Sonnet 5 RLM; BM25 ranking | Run map, pilots, rules, main run, probes, harness v2, reader arms, held-out, extensions, answerability check |
 
 Published baselines and the reason for choosing BrowseComp-Plus: [`wiki/docs/browsecomp-plus-reference.md`](../wiki/docs/browsecomp-plus-reference.md).
 

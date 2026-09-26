@@ -55,6 +55,7 @@ Letters repeat across phases, so always name the family: "pack arm C", "RLM arm 
 | Jev screen | One Noul per doc, used to rank docs. Arms R, H, B (as a tool), and J. |
 | Jev decide | A route Choice (act / review / abstain) plus one Noul per candidate; on act, cite the top Noul. Pack arms, corpus arms, and RLM arm B (as a tool). |
 | Jev check | After an answer exists: "do the cited docs support this proposed answer?" (a Choice; its p(act) is the score. The Phase 1 runs also asked one Noul per cited doc, since dropped as unused). Applied the same way to every Phase 1 arm; never shown to the model. The code calls it the gate (`verify_gate`, `gate_post`). |
+| Answerability check | Before any answer: "do these documents contain enough information to answer the question?" (a Choice: yes / partly / no; p(yes) is the score). Tested once, offline, on reader arm J's top 8 (`scripts/answerable_jev.py`). Not the Jev check: the Jev check verifies an answer after it exists; the answerability check asks whether to answer at all. |
 | p(act) | The probability of the act route in a Choice. The Jev check's score. |
 
 ## Outcomes and metrics
