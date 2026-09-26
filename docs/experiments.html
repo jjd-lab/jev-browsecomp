@@ -162,6 +162,7 @@
   .compare th[scope="row"], .compare thead th:first-child { padding-left: 0; }
   .points { margin: 1.5rem 0 0; padding-left: 1.2rem; max-width: 42rem; color: var(--muted); font-size: 0.95rem; }
   .points li { margin: 0.35rem 0; }
+  .points ul { margin: 0.35rem 0 0; padding-left: 1.1rem; }
   footer {
     display: flex;
     flex-wrap: wrap;
@@ -306,7 +307,12 @@
     </table>
     <ul class="points">
       <li>The Jev reader declined more often, at 1/8 of the cost. Across all 50, it declined 37.</li>
-      <li>The same Jev check ran on both methods. On the Jev reader's two confident answers, it caught the one from memory (0.06) and missed the wrong one (0.55).</li>
+      <li>The same Jev check ran on both methods. On the Jev reader's two confident answers:
+        <ul>
+          <li><b>Caught, Jev check 0.06.</b> Sonnet, 55% sure, named the answer from its own memory. The documents it cited did not support it, and Jev said so. The judge still marked it right, because Sonnet happened to know it.</li>
+          <li><b>Missed, Jev check 0.55.</b> Sonnet, 78% sure, named a film. The clues were loose: a release window, the director's age at death, and a country identified only by a statistic. No document held that statistic, so Sonnet guessed the country from memory and got it wrong. Its one cited document did confirm the film's year and the director's age. Jev found those cited facts true and could not tell that the key step came from memory.</li>
+        </ul>
+      </li>
       <li>Untested idea: Jev screen scores every document before Sonnet runs, so when none scores high, a system could decline without calling Sonnet. These runs did not save the scores.</li>
     </ul>
   </section>
