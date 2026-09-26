@@ -298,6 +298,7 @@
     <ul class="points">
       <li>Both flag wrong answers well. Sonnet's confidence did a little better, but with only 9 wrong answers, one that both rated highly accounts for most of the gap.</li>
       <li>AUROC cannot be computed on the held-out questions, because every answer there is wrong: no document supports it. What we can count is how many answers each flag scored below 0.5. Across both methods' 13 held-out answers, the Jev check flagged 12 and Sonnet's confidence 11. The one difference was an answer from memory that Sonnet was 55% sure of and the Jev check scored 0.06.</li>
+      <li>One caveat slightly favors Sonnet. The Jev check also ran on declines that cited documents, and Jev often agreed that the documents support "cannot be determined". The comparison counted that as a failed flag. Two of the 9 wrong main answers are declines.</li>
     </ul>
   </section>
 

@@ -41,3 +41,6 @@ Reverses "This repository is the public one": GitHub keeps `refs/pull/N/head` af
 
 ## [2026-09-26] decision | Jev check asks only the Choice
 `verify_gate` drops the per-cited-doc Nouls and no longer returns `support`; the analysis only read p(act). Phase 1 rows keep their recorded `support`. Pages: `docs/architecture.md`, `docs/glossary.md`.
+
+## [2026-09-26] review | The Jev check also scored declines
+Declines that cite docs got a Jev check; Jev often agreed the docs support "cannot be determined", and the co-primary counted that against it. With held-out declines left out, AUROC is 0.913 vs 0.944 instead of 0.912 vs 0.958; the result of record stands. Pages: `results/findings/phase1_rlm.md`, `docs/experiments.html`.

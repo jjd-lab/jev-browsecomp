@@ -222,6 +222,19 @@ Held-out behavior on the same 30 questions, plus reader arm J on all 50:
 
 Both arms mostly decline. Reader arm J declines more often and costs ~1/8 as much. But on 2 of 30 it answered at ≥ 50% stated confidence, where RLM arm A never did. RLM arm A spent ~4.6 min per question searching before declining.
 
+### Caveat: the Jev check also scored declines (found 2026-09-26, after all results)
+
+`gate_rlm_jev.py` runs the Jev check on every row with an answer and a cited doc. A decline such as "Cannot be determined from the provided documents" often cites the docs it looked at, so Jev was asked whether those docs support the answer "cannot be determined". On held-out rows it was called 26 times per arm, on 8 real answers and 18 declines. It scored 12 declines at 0.50 to 0.74, a fair reading of the question it was asked.
+
+The co-primary counts every held-out row as should-not-act and compares Jev p(act) with stated confidence, which Sonnet puts near 5% on its declines. So each decline Jev agreed with counts against the Jev check. RLM arm A's 100 main answers plus held-out:
+
+| Held-out rows included | AUROC Jev check | AUROC stated confidence |
+| --- | ---: | ---: |
+| All 30 (the co-primary as run) | 0.912 | 0.958 |
+| Only the 8 real answers | 0.913 | 0.944 |
+
+Stated confidence still wins, but declines widen the gap by about a third. The main-question AUROC (0.87 vs 0.93) has the same issue on a small scale: 2 of its 9 wrong rows are declines, one scored 0.50 by Jev. The result of record is unchanged. A fairer protocol skips the Jev check on declines, or asks Jev a separate question for them, such as whether the docs contain the answer at all.
+
 ## Reader arm K: BM25 reader control (rules set before the run, 2026-09-25)
 
 Why: in the 1K set, the ~9 gold and evidence docs sit among ~990 random corpus docs, so plain lexical retrieval may already find them. If BM25 top 8 plus one Sonnet call matches reader arm J, the reader arm J result means "skip the RLM", not "use Jev". Jev is two-thirds of reader arm J's cost.
