@@ -118,6 +118,14 @@
   .info th:first-child, .info td:first-child { padding-left: 0; }
   .info td:first-child, .info .num { font-weight: 500; white-space: nowrap; }
   .info.example td:first-child { white-space: normal; font-weight: 400; }
+  .chart-fig { margin: 1.5rem 0 0; max-width: 42rem; }
+  .chart-fig figcaption { font-weight: 600; font-size: 0.95rem; margin-bottom: 0.5rem; }
+  .chart { display: block; width: 100%; height: auto; }
+  .chart-bar { fill: var(--accent); }
+  .chart-base { stroke: var(--line); }
+  .chart-rule { stroke: var(--muted); stroke-dasharray: 3 3; }
+  .chart-label { font-size: 11px; font-weight: 500; fill: var(--ink); }
+  .chart-note, .chart-tick { font-size: 10px; fill: var(--muted); }
   .flow-title { margin: 1.75rem 0 0; font-weight: 600; font-size: 0.95rem; }
   .flow { display: grid; gap: 1rem; margin-top: 0.75rem; }
   .flow-row { display: flex; flex-wrap: wrap; align-items: center; gap: 0.35rem; font-size: 0.88rem; }
@@ -261,7 +269,7 @@
   </section>
 
   <section id="held-out">
-    <h2>When no document has the answer, the Jev reader declines more</h2>
+    <h2>Unanswerable questions: what each method did</h2>
     <p class="lede">We took 50 more questions and swapped out the documents that answer them. Nothing left supports an answer, so the right move is to decline. The Jev reader did that more often than the plain RLM, at 1/8 of the cost.</p>
     <table class="compare held">
       <caption>The same 30 held-out questions</caption>
@@ -286,8 +294,8 @@
   </section>
 
   <section id="answerable">
-    <h2>Answerability check: can these documents answer the question?</h2>
-    <p class="lede">The Jev check, below, verifies an answer after Sonnet writes it, so its verdict depends on what Sonnet wrote. The answerability check asks about the documents alone, before any answer. A made-up case where none of the 8 documents answers the painter question, and one is a true biography of a different painter:</p>
+    <h2>Unanswerable questions: asking Jev before Sonnet runs</h2>
+    <p class="lede">Above, Sonnet decided whether to decline after reading the documents. Here Jev alone decides, before any answer, with an answerability check. The Jev check, below, is different: it verifies an answer after Sonnet writes it, so its verdict depends on what Sonnet wrote. The answerability check asks about the documents alone, before any answer. A made-up case where none of the 8 documents answers the painter question, and one is a true biography of a different painter:</p>
     <table class="info example">
       <thead><tr><th>Sonnet's reply</th><th>Jev check</th><th>Answerability</th></tr></thead>
       <tbody>
@@ -297,6 +305,47 @@
       </tbody>
     </table>
     <p class="lede">We asked this as one Choice per question: <i>do these 8 documents contain enough information to answer the question?</i> It ran on the Jev reader's 8 documents for all 100 main and 50 held-out questions, for $0.09 in total. We wrote the rules before the run.</p>
+    <figure class="chart-fig">
+      <figcaption>Jev's probability of yes, one bar per 0.05; bar height is the number of questions</figcaption>
+      <svg class="chart" viewBox="0 0 360 250" role="img" aria-label="Unanswerable questions cluster near 0 and all score below 0.4; answerable questions cluster near 1, with 15 below 0.5">
+        <text class="chart-label" x="8" y="24">Unanswerable questions (50)</text>
+        <line class="chart-base" x1="8" x2="352" y1="98" y2="98"/>
+        <rect class="chart-bar" x="9.0" y="66.8" width="15.2" height="31.2" rx="2"><title>0.00–0.05: 19 questions</title></rect>
+        <text class="chart-tick" x="16.6" y="62.8" text-anchor="middle">19</text>
+        <rect class="chart-bar" x="26.2" y="78.3" width="15.2" height="19.7" rx="2"><title>0.05–0.10: 12 questions</title></rect>
+        <rect class="chart-bar" x="43.4" y="84.9" width="15.2" height="13.1" rx="2"><title>0.10–0.15: 8 questions</title></rect>
+        <rect class="chart-bar" x="60.6" y="94.7" width="15.2" height="3.3" rx="2"><title>0.15–0.20: 2 questions</title></rect>
+        <rect class="chart-bar" x="77.8" y="91.4" width="15.2" height="6.6" rx="2"><title>0.20–0.25: 4 questions</title></rect>
+        <rect class="chart-bar" x="95.0" y="94.7" width="15.2" height="3.3" rx="2"><title>0.25–0.30: 2 questions</title></rect>
+        <rect class="chart-bar" x="112.2" y="96" width="15.2" height="2" rx="2"><title>0.30–0.35: 1 question</title></rect>
+        <rect class="chart-bar" x="129.4" y="94.7" width="15.2" height="3.3" rx="2"><title>0.35–0.40: 2 questions</title></rect>
+        <text class="chart-label" x="8" y="136">Answerable questions (100)</text>
+        <line class="chart-base" x1="8" x2="352" y1="210" y2="210"/>
+        <rect class="chart-bar" x="43.4" y="203.4" width="15.2" height="6.6" rx="2"><title>0.10–0.15: 4 questions</title></rect>
+        <rect class="chart-bar" x="60.6" y="208" width="15.2" height="2" rx="2"><title>0.15–0.20: 1 question</title></rect>
+        <rect class="chart-bar" x="77.8" y="208" width="15.2" height="2" rx="2"><title>0.20–0.25: 1 question</title></rect>
+        <rect class="chart-bar" x="95.0" y="208" width="15.2" height="2" rx="2"><title>0.25–0.30: 1 question</title></rect>
+        <rect class="chart-bar" x="129.4" y="205.1" width="15.2" height="4.9" rx="2"><title>0.35–0.40: 3 questions</title></rect>
+        <rect class="chart-bar" x="146.6" y="208" width="15.2" height="2" rx="2"><title>0.40–0.45: 1 question</title></rect>
+        <rect class="chart-bar" x="163.8" y="203.4" width="15.2" height="6.6" rx="2"><title>0.45–0.50: 4 questions</title></rect>
+        <rect class="chart-bar" x="181.0" y="205.1" width="15.2" height="4.9" rx="2"><title>0.50–0.55: 3 questions</title></rect>
+        <rect class="chart-bar" x="198.2" y="205.1" width="15.2" height="4.9" rx="2"><title>0.55–0.60: 3 questions</title></rect>
+        <rect class="chart-bar" x="215.4" y="205.1" width="15.2" height="4.9" rx="2"><title>0.60–0.65: 3 questions</title></rect>
+        <rect class="chart-bar" x="232.6" y="200.2" width="15.2" height="9.8" rx="2"><title>0.65–0.70: 6 questions</title></rect>
+        <rect class="chart-bar" x="249.8" y="205.1" width="15.2" height="4.9" rx="2"><title>0.70–0.75: 3 questions</title></rect>
+        <rect class="chart-bar" x="267.0" y="205.1" width="15.2" height="4.9" rx="2"><title>0.75–0.80: 3 questions</title></rect>
+        <rect class="chart-bar" x="284.2" y="201.8" width="15.2" height="8.2" rx="2"><title>0.80–0.85: 5 questions</title></rect>
+        <rect class="chart-bar" x="301.4" y="193.6" width="15.2" height="16.4" rx="2"><title>0.85–0.90: 10 questions</title></rect>
+        <rect class="chart-bar" x="318.6" y="193.6" width="15.2" height="16.4" rx="2"><title>0.90–0.95: 10 questions</title></rect>
+        <rect class="chart-bar" x="335.8" y="146.0" width="15.2" height="64.0" rx="2"><title>0.95–1.00: 39 questions</title></rect>
+        <text class="chart-tick" x="343.4" y="142.0" text-anchor="middle">39</text>
+        <line class="chart-rule" x1="180.0" x2="180.0" y1="14" y2="210"/>
+        <text class="chart-note" x="176.0" y="226" text-anchor="end">← decline below 0.5</text>
+        <text class="chart-tick" x="8" y="244">0</text>
+        <text class="chart-tick" x="180.0" y="244" text-anchor="middle">0.5</text>
+        <text class="chart-tick" x="352" y="244" text-anchor="end">1</text>
+      </svg>
+    </figure>
     <table class="compare flag">
       <caption>Who declines what: Jev's probability of yes, Sonnet's own replies, and both</caption>
       <thead><tr><th></th><th class="num">Unanswerable questions declined, of 50</th><th class="num">Answerable questions wrongly declined, of 94</th></tr></thead>
