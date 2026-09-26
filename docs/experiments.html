@@ -307,8 +307,8 @@
   </section>
 
   <section id="harness">
-    <h2>The run setup, not Jev, caused most of the gap</h2>
-    <p class="lede">The run setup is the code that drives the RLM: how many turns Sonnet gets and what happens when they run out. In the first setup, Sonnet had 20 turns, and its last message was often more code instead of an answer, which counted as no answer. The fixed setup gives 30 turns, and the last turn tells Sonnet to answer from what it has found, without code. Below are the same 100 questions on both.</p>
+    <h2>Jev as a tool inside the RLM</h2>
+    <p class="lede">Every headline number on this page uses the fixed setup. We first ran the RLM with 20 turns and the RLM library's prompt for running out of turns, to which Sonnet often replied with more code instead of an answer. Each Jev tool call spends a turn, so this hit the RLM with Jev tools hardest. The fixed setup gives 30 turns and a last turn that tells Sonnet to answer without code. The same 100 questions on both:</p>
     <div class="tables">
       <table class="compare">
         <caption>First setup, 20 turns</caption>
@@ -335,8 +335,7 @@
       </table>
     </div>
     <ul class="points">
-      <li>The fixed setup moved the RLM with Jev tools from 10 points behind the plain RLM to 1 point behind.</li>
-      <li>The Jev tools still cost more, $0.42 per question against $0.35.</li>
+      <li>With the fixed setup, the RLM with Jev tools went from 10 points behind the plain RLM to 1 point behind, but still cost more, $0.42 per question against $0.35. Inside the RLM, Jev added cost without adding accuracy. In front of one call, as the Jev reader, it cut cost.</li>
       <li>On the 22 questions where the RLM with Jev tools ran out of turns in the first setup, the plain RLM got 17 right and the Jev-tools version 7 in that setup. The shortlist version got 13 at $0.66 each, and the Jev-tools version in the fixed setup got 13 at $1.01 each.</li>
       <li>Rerunning the same questions moves the count by about 3 either way.</li>
       <li>The whole study cost $208, and Jev was $18 of it, or 9%.</li>
