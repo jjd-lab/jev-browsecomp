@@ -200,7 +200,7 @@
     <p class="lede">Jev is used in two ways. Take a made-up question: <i>which painter failed an art school's entrance exam and later taught there?</i></p>
     <ul class="points">
       <li><b>Jev screen</b> scores each document for how likely it is to help answer the question. A biography of a painter who taught at an art school might score 0.9, and a football match report 0.01.</li>
-      <li><b>Jev decide</b> reads up to 8 documents and says whether they are enough to answer (act), need a closer look (review), or are not enough (abstain), and which of them to cite.</li>
+      <li><b>Jev decide</b> reads up to 8 documents and answers two things. Together, are they enough to answer (act), do they need a closer look (review), or are they not enough (abstain)? It gives a probability for each of the three. And for each document, how likely is it to support the answer? The highest one is cited.</li>
     </ul>
     <div class="looks">
       <article class="look">
@@ -279,7 +279,7 @@
         <span class="num">02</span>
         <div>
           <h3>The Jev check lost on the main questions.</h3>
-          <p>The Jev check runs Jev decide on the documents an answer cites, to ask whether they support it. Sonnet also states its own confidence with each answer. We measured how well each score separates wrong answers from right ones with AUROC, where 1.0 is perfect and 0.5 is a coin flip. On the plain RLM's answers, the Jev check scored 0.87 and Sonnet's stated confidence 0.93.</p>
+          <p>The Jev check asks Jev whether the documents an answer cites support that answer. Its score is Jev's probability of act. Sonnet also states its own confidence with each answer. We measured how well each score separates wrong answers from right ones with AUROC, where 1.0 is perfect and 0.5 is a coin flip. On the plain RLM's answers, the Jev check scored 0.87 and Sonnet's stated confidence 0.93.</p>
         </div>
         <span class="tag loss">Stated confidence wins</span>
       </li>
