@@ -194,6 +194,17 @@
 </section>
 
 <main>
+  <section id="takeaways">
+    <h2>What this means for a RAG system</h2>
+    <ul class="points">
+      <li><b>Use Jev to pick the context.</b> Its top 8 of 1,000 documents held one with the answer on 94 of 100 questions, against 49 for keyword ranking. One LLM call on those 8 matched a search agent at 38% of the cost and 1/7 of the time. <a href="#arms">Methods</a></li>
+      <li><b>Use Jev to decide whether to answer.</b> Asked whether the documents can answer at all, before the LLM runs, Jev separated answerable from unanswerable questions almost perfectly, in an easy test. <a href="#held-out">Unanswerable questions</a></li>
+      <li><b>Keep Jev outside the agent loop.</b> As tools inside the search agent, Jev added cost without adding accuracy. <a href="#harness">Jev as a tool</a></li>
+      <li><b>Keep the LLM's own confidence for checking answers.</b> After an answer is written, Sonnet's stated confidence flagged wrong answers a little better than the Jev check. <a href="#flagging">Jev check</a></li>
+    </ul>
+    <p class="note">At 1,000 documents per question. A larger corpus needs a cheap first search before Jev; see <a href="#limits">Limitations</a>.</p>
+  </section>
+
   <section id="jev">
     <h2>How Jev is used</h2>
     <p class="lede">Jev is a small, fast model from Typesafe. It answers typed questions about text with probabilities, not prose.</p>
