@@ -87,7 +87,7 @@
   .cover { border-top: 0; }
   h2 { margin: 0 0 1rem; font-size: clamp(1.4rem, 3.5vw, 1.8rem); font-weight: 600; line-height: 1.25; letter-spacing: -0.015em; }
   .lede { max-width: 42rem; margin: 0; color: var(--muted); }
-  .lede + .lede, .points + .lede { margin-top: 1rem; }
+  .lede + .lede, .points + .lede, .info + .lede { margin-top: 1rem; }
   .looks { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 1.75rem; }
   .look {
     padding: 1.25rem;
@@ -117,6 +117,7 @@
   .info th, .info td { white-space: normal; vertical-align: top; }
   .info th:first-child, .info td:first-child { padding-left: 0; }
   .info td:first-child, .info .num { font-weight: 500; white-space: nowrap; }
+  .info.example td:first-child { white-space: normal; font-weight: 400; }
   .flow-title { margin: 1.75rem 0 0; font-weight: 600; font-size: 0.95rem; }
   .flow { display: grid; gap: 1rem; margin-top: 0.75rem; }
   .flow-row { display: flex; flex-wrap: wrap; align-items: center; gap: 0.35rem; font-size: 0.88rem; }
@@ -165,7 +166,7 @@
 <section class="cover" id="result">
   <p class="eyebrow">100 questions · 1,000 documents each</p>
   <h1><em>Jev</em> picks the documents. One call answers.</h1>
-  <p class="deck">On BrowseComp-Plus, Jev screen picks 8 of 1,000 documents, and a single Sonnet 5 call answers from those 8. We call this the Jev reader. It is as accurate as a Sonnet 5 Recursive Language Model (RLM), at $0.13 per question instead of $0.35, and 21 seconds instead of 143.</p>
+  <p class="deck">On BrowseComp-Plus, Jev screen picks 8 of 1,000 documents, and a single Sonnet 5 call answers from those 8. We call this the Jev reader. It is as accurate as a Sonnet 5 Recursive Language Model (RLM), at $0.13 per question instead of $0.35, and 21 seconds instead of 143. Asked whether its 8 documents can answer at all, Jev also separated answerable from unanswerable questions in an easy test.</p>
   <div class="figures">
     <article>
       <strong>0.94</strong>
@@ -285,28 +286,37 @@
   </section>
 
   <section id="answerable">
-    <h2>Asking Jev directly whether to answer</h2>
-    <p class="lede">We then asked Jev one Choice per question, before any answer: <i>do these 8 documents contain enough information to answer the question?</i> It ran on the Jev reader's 8 documents for all 100 main and 50 held-out questions, for $0.09 in total. We wrote the rules before the run.</p>
+    <h2>Answerability check: can these documents answer the question?</h2>
+    <p class="lede">The Jev check, below, verifies an answer after Sonnet writes it, so its verdict depends on what Sonnet wrote. The answerability check asks about the documents alone, before any answer. A made-up case where none of the 8 documents answers the painter question, and one is a true biography of a different painter:</p>
+    <table class="info example">
+      <thead><tr><th>Sonnet's reply</th><th>Jev check</th><th>Answerability</th></tr></thead>
+      <tbody>
+        <tr><td>Declines, citing a football report</td><td>The report supports "cannot be determined": yes</td><td>No, decline</td></tr>
+        <tr><td>Guesses from memory, citing the football report</td><td>No, flagged</td><td>No, decline</td></tr>
+        <tr><td>Guesses the other painter, citing the biography</td><td>Yes, fooled by true facts</td><td>No, decline</td></tr>
+      </tbody>
+    </table>
+    <p class="lede">We asked this as one Choice per question: <i>do these 8 documents contain enough information to answer the question?</i> It ran on the Jev reader's 8 documents for all 100 main and 50 held-out questions, for $0.09 in total. We wrote the rules before the run.</p>
     <table class="compare flag">
-      <caption>Decline when Jev's probability of yes is below a threshold</caption>
+      <caption>Who declines what: Jev's probability of yes, Sonnet's own replies, and both</caption>
       <thead><tr><th></th><th class="num">Held-out declined, of 50</th><th class="num">Correct main answers lost, of 94</th></tr></thead>
       <tbody>
-        <tr><th scope="row">Below 0.2</th><td class="num">41</td><td class="num">2</td></tr>
-        <tr><th scope="row">Below 0.3</th><td class="num">47</td><td class="num">4</td></tr>
-        <tr><th scope="row">Below 0.5, the rule set before the run</th><td class="num">50</td><td class="num">10</td></tr>
         <tr><th scope="row">Sonnet on its own: declined or under 50% sure</th><td class="num">47</td><td class="num">0</td></tr>
+        <tr><th scope="row">Jev alone, below 0.2</th><td class="num">41</td><td class="num">2</td></tr>
+        <tr><th scope="row">Jev alone, below 0.5, the rule set before the run</th><td class="num">50</td><td class="num">10</td></tr>
+        <tr><th scope="row">Jev below 0.2 first, then Sonnet</th><td class="num">49</td><td class="num">2</td></tr>
       </tbody>
     </table>
     <ul class="points">
       <li>Jev separated answerable from unanswerable questions almost perfectly: AUROC 0.98, where higher is better and 0.5 is a coin flip. Held-out questions scored a median of 0.06, main questions 0.89.</li>
-      <li>It scored all three of Sonnet's confident held-out answers low, so declining on Jev would have stopped them before Sonnet ran. The price at 0.5 is 10 correct answers, taking the Jev reader from 0.94 to 0.84. Lower thresholds lose fewer.</li>
+      <li>Sonnet on its own loses no correct answers but lets 3 confident unsupported answers through. Jev scored all three low. Putting Jev first at 0.2 catches 2 of them for 2 correct answers lost, and Jev decides before Sonnet runs, for about $0.0006 a question. Only the 0.5 rule was set before the run; the other rows are exploratory.</li>
       <li>Caveat: this held-out set is an easy case. Its answer documents were replaced with random ones, so its top 8 is plainly off topic. Real unanswerable questions have near-miss documents. This measures the signal; no Sonnet call was actually skipped.</li>
     </ul>
   </section>
 
   <section id="flagging">
-    <h2>Checking answers: Jev check and Sonnet's confidence</h2>
-    <p class="lede">The Jev check verifies an answer after it is written; it does not decide whether to answer. Every answer gets two numbers: the confidence Sonnet writes in its answer, and the Jev check's probability that the cited documents support it. A good check gives wrong answers the lower number.</p>
+    <h2>Jev check: is a written answer supported?</h2>
+    <p class="lede">The Jev check verifies an answer after it is written; it does not decide whether to answer, which is the answerability check's job. Every answer gets two numbers: the confidence Sonnet writes in its answer, and the Jev check's probability that the cited documents support it. A good check gives wrong answers the lower number.</p>
     <table class="compare flag">
       <caption>The plain RLM's answers to the 100 main questions, 9 of them wrong</caption>
       <thead><tr><th></th><th class="num">Sonnet's confidence</th><th class="num">Jev check</th></tr></thead>
