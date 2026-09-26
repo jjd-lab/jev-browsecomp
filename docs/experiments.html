@@ -138,6 +138,18 @@
   th { font-size: 0.8rem; font-weight: 500; color: var(--muted); }
   th.num, td.num { text-align: right; }
   td.num { font-weight: 500; }
+  .info { margin-top: 1.5rem; }
+  .info caption { text-align: left; font-weight: 600; font-size: 0.95rem; padding-bottom: 0.4rem; }
+  .info th, .info td { white-space: normal; vertical-align: top; }
+  .info th:first-child, .info td:first-child { padding-left: 0; }
+  .info td:first-child, .info .num { font-weight: 500; white-space: nowrap; }
+  .flow-title { margin: 1.75rem 0 0; font-weight: 600; font-size: 0.95rem; }
+  .flow { display: grid; gap: 1rem; margin-top: 0.75rem; }
+  .flow-row { display: flex; flex-wrap: wrap; align-items: center; gap: 0.35rem; font-size: 0.88rem; }
+  .flow-row b { width: 100%; font-weight: 500; font-size: 0.85rem; color: var(--muted); }
+  .step { padding: 0.15rem 0.6rem; border: 1px solid var(--line); border-radius: 999px; background: var(--surface); white-space: nowrap; }
+  .step.jev { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); font-weight: 500; }
+  .arrow { color: var(--muted); }
   .note { margin-top: 1.25rem; max-width: 42rem; font-size: 0.95rem; color: var(--muted); }
   .tables { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 1.5rem; }
   .compare caption { text-align: left; font-weight: 600; font-size: 0.95rem; padding-bottom: 0.4rem; }
@@ -196,18 +208,32 @@
 <main>
   <section id="jev">
     <h2>How Jev is used</h2>
-    <p class="lede">Jev is a small, fast model from Typesafe that answers typed questions about text. It does not write text. It returns numbers that code can act on. We used two of its question types.</p>
-    <ul class="points">
-      <li><b>Noul:</b> a yes-or-no question, answered with a probability of yes. <i>Does this document help answer the question?</i> might get 0.9.</li>
-      <li><b>Choice:</b> pick one of several named options, with a probability for each. <i>Act, review, or abstain?</i> might get 0.80, 0.15, and 0.05.</li>
-    </ul>
-    <p class="lede">We built three Jev calls from these. Take a made-up question: <i>which painter failed an art school's entrance exam and later taught there?</i></p>
-    <ul class="points">
-      <li><b>Jev screen</b> asks one Noul per document: does it support the question? Jev reads the first 12,000 characters of each document, 8 documents per call, with calls run in parallel. A biography of a painter who taught at an art school might score 0.9, and a football match report 0.01. The Jev reader screens all 1,000 documents and keeps the top 8. The RLM with Jev tools can screen any documents it chooses.</li>
-      <li><b>Jev decide</b> reads up to 8 documents and asks a Choice: together, are they enough to answer (act), do they need a closer look (review), or are they not enough (abstain)? It also asks one Noul per document, and the highest one is cited. The RLM with Jev tools had to call it on its best evidence before answering.</li>
-      <li><b>Jev check</b> runs after any method answers. It asks a Choice: do the documents the answer cites support that answer? Jev reads 12,000 characters around where the answer appears in each. Its score is the probability of act. We compared it with the confidence Sonnet states in its answer. It never changed an answer.</li>
-    </ul>
-    <p class="lede">Jev never sees the benchmark's answer. In the Jev reader, Sonnet sees the 8 documents Jev picked, in Jev's order, but not Jev's scores. Jev charges by input tokens, $0.042 per million. Screening 1,000 documents cost about $0.09 per question, and Jev was $18 of the study's $208.</p>
+    <p class="lede">Jev is a small, fast model from Typesafe. It answers typed questions about text with probabilities, not prose.</p>
+    <table class="info">
+      <caption>Example: which painter failed an art school's entrance exam and later taught there?</caption>
+      <thead><tr><th>Type</th><th>Jev is asked</th><th class="num">Jev returns</th></tr></thead>
+      <tbody>
+        <tr><td>Noul</td><td>Does this painter's biography help answer it?</td><td class="num">yes 0.90</td></tr>
+        <tr><td>Noul</td><td>Does this football match report help answer it?</td><td class="num">yes 0.01</td></tr>
+        <tr><td>Choice</td><td>Are these documents enough to answer?</td><td class="num">act 0.80<br>review 0.15<br>abstain 0.05</td></tr>
+      </tbody>
+    </table>
+    <table class="info">
+      <caption>Three Jev calls built from these</caption>
+      <thead><tr><th>Call</th><th>Asks</th><th>Used by</th></tr></thead>
+      <tbody>
+        <tr><td>Jev screen</td><td>A Noul per document</td><td>Jev reader, on all 1,000. RLM with Jev tools, on any it picks.</td></tr>
+        <tr><td>Jev decide</td><td>A Choice over up to 8 documents, plus Nouls to pick the cite</td><td>RLM with Jev tools, before it answers</td></tr>
+        <tr><td>Jev check</td><td>A Choice: do the cited documents support this answer?</td><td>Every method, after it answers. Never changes the answer.</td></tr>
+      </tbody>
+    </table>
+    <p class="flow-title">Where Jev sits in each method</p>
+    <div class="flow">
+      <div class="flow-row"><b>Plain RLM</b><span class="step">1,000 documents</span><span class="arrow">→</span><span class="step">Sonnet searches with code</span><span class="arrow">→</span><span class="step">answer</span><span class="arrow">→</span><span class="step jev">Jev check</span></div>
+      <div class="flow-row"><b>RLM with Jev tools</b><span class="step">1,000 documents</span><span class="arrow">→</span><span class="step">Sonnet searches with code</span><span class="arrow">→</span><span class="step jev">Jev screen</span><span class="arrow">→</span><span class="step jev">Jev decide</span><span class="arrow">→</span><span class="step">answer</span><span class="arrow">→</span><span class="step jev">Jev check</span></div>
+      <div class="flow-row"><b>Jev reader</b><span class="step">1,000 documents</span><span class="arrow">→</span><span class="step jev">Jev screen</span><span class="arrow">→</span><span class="step">top 8</span><span class="arrow">→</span><span class="step">one Sonnet call</span><span class="arrow">→</span><span class="step">answer</span><span class="arrow">→</span><span class="step jev">Jev check</span></div>
+    </div>
+    <p class="note">Jev reads up to 12,000 characters per document and never sees the benchmark's answer. Sonnet never sees Jev's scores. Jev costs $0.042 per million input tokens: about $0.09 to screen 1,000 documents, and $18 of the study's $208.</p>
   </section>
 
   <section id="arms">
