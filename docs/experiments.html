@@ -89,7 +89,7 @@
   .cover { border-top: 0; }
   h2 { margin: 0 0 1rem; font-size: clamp(1.4rem, 3.5vw, 1.8rem); font-weight: 600; line-height: 1.25; letter-spacing: -0.015em; }
   .lede { max-width: 42rem; margin: 0; color: var(--muted); }
-  .lede + .lede { margin-top: 1rem; }
+  .lede + .lede, .points + .lede { margin-top: 1rem; }
   .looks { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 1.75rem; }
   .look {
     padding: 1.25rem;
@@ -194,14 +194,25 @@
 </section>
 
 <main>
+  <section id="jev">
+    <h2>How Jev is used</h2>
+    <p class="lede">Jev is a small, fast model from Typesafe that answers typed questions about text. It does not write text. It returns numbers that code can act on. We used two of its question types.</p>
+    <ul class="points">
+      <li><b>Noul:</b> a yes-or-no question, answered with a probability of yes. <i>Does this document help answer the question?</i> might get 0.9.</li>
+      <li><b>Choice:</b> pick one of several named options, with a probability for each. <i>Act, review, or abstain?</i> might get 0.80, 0.15, and 0.05.</li>
+    </ul>
+    <p class="lede">We built three Jev calls from these. Take a made-up question: <i>which painter failed an art school's entrance exam and later taught there?</i></p>
+    <ul class="points">
+      <li><b>Jev screen</b> asks one Noul per document: does it support the question? Jev reads the first 12,000 characters of each document, 8 documents per call, with calls run in parallel. A biography of a painter who taught at an art school might score 0.9, and a football match report 0.01. The Jev reader screens all 1,000 documents and keeps the top 8. The RLM with Jev tools can screen any documents it chooses.</li>
+      <li><b>Jev decide</b> reads up to 8 documents and asks a Choice: together, are they enough to answer (act), do they need a closer look (review), or are they not enough (abstain)? It also asks one Noul per document, and the highest one is cited. The RLM with Jev tools had to call it on its best evidence before answering.</li>
+      <li><b>Jev check</b> runs after any method answers. It asks a Choice: do the documents the answer cites support that answer? Jev reads 12,000 characters around where the answer appears in each. Its score is the probability of act. We compared it with the confidence Sonnet states in its answer. It never changed an answer.</li>
+    </ul>
+    <p class="lede">Jev never sees the benchmark's answer. In the Jev reader, Sonnet sees the 8 documents Jev picked, in Jev's order, but not Jev's scores. Jev charges by input tokens, $0.042 per million. Screening 1,000 documents cost about $0.09 per question, and Jev was $18 of the study's $208.</p>
+  </section>
+
   <section id="arms">
     <h2>The three methods</h2>
     <p class="lede">Every question comes with 1,000 BrowseComp-Plus documents, about 7 to 9 million tokens. A few of them hold the answer and the facts behind its clues; the rest are random. A Sonnet 5 judge marks each answer right or wrong against the benchmark's answer. We call one method better only when the 95% confidence interval for the difference, over the same questions, is entirely above or below zero.</p>
-    <p class="lede">Jev is used in two ways. Take a made-up question: <i>which painter failed an art school's entrance exam and later taught there?</i></p>
-    <ul class="points">
-      <li><b>Jev screen</b> scores each document for how likely it is to help answer the question. A biography of a painter who taught at an art school might score 0.9, and a football match report 0.01.</li>
-      <li><b>Jev decide</b> reads up to 8 documents and answers two things. Together, are they enough to answer (act), do they need a closer look (review), or are they not enough (abstain)? It gives a probability for each of the three. And for each document, how likely is it to support the answer? The highest one is cited.</li>
-    </ul>
     <div class="looks">
       <article class="look">
         <div>
@@ -240,7 +251,34 @@
         </div>
       </article>
     </div>
-    <p class="note">The Jev reader scored 3 points above the plain RLM on the fixed setup described below, with a 95% interval of −3 to +9, so the difference is not clear. On the first setup both scored 0.94. We also ran held-out questions: questions whose answer documents we removed, so the right move is to decline. On the 30 both methods ran, the plain RLM declined 19 and the Jev reader 25. Asked to state a confidence, the plain RLM never said 50% or more; the Jev reader did twice, once answering from memory and once wrong.</p>
+    <p class="note">The Jev reader scored 3 points above the plain RLM on the fixed setup described below, with a 95% interval of −3 to +9, so the difference is not clear. On the first setup both scored 0.94.</p>
+  </section>
+
+  <section id="held-out">
+    <h2>When no document has the answer</h2>
+    <p class="lede">A useful system should say it cannot tell rather than guess. To test this, we took 50 more questions and swapped the documents that answer them for random ones. Nothing in the 1,000 documents supports an answer, so the right move is to decline. An answer the judge marks correct still came from the model's memory, not the documents.</p>
+    <div class="tables">
+      <table class="compare">
+        <caption>The same 30 held-out questions</caption>
+        <thead><tr><th></th><th class="num">Plain RLM</th><th class="num">Jev reader</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Declined</th><td class="num">19</td><td class="num">25</td></tr>
+          <tr><th scope="row">No answer</th><td class="num">3</td><td class="num">0</td></tr>
+          <tr><th scope="row">Gave an answer</th><td class="num">8</td><td class="num">5</td></tr>
+          <tr><th scope="row">Stated confidence 50% or more</th><td class="num">0</td><td class="num">2</td></tr>
+          <tr><th scope="row">Jev check 0.5 or more</th><td class="num">0</td><td class="num">1</td></tr>
+          <tr><th scope="row">Correct from memory</th><td class="num">2</td><td class="num">1</td></tr>
+          <tr><th scope="row">Cost per question</th><td class="num">$1.19</td><td class="num">$0.14</td></tr>
+          <tr><th scope="row">Median time</th><td class="num">276 s</td><td class="num">16 s</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <ul class="points">
+      <li>Both mostly decline. The Jev reader declines more often, at about 1/8 of the cost. The plain RLM searches for about 4.6 minutes before it gives up; the Jev reader decides from one look at 8 documents.</li>
+      <li>The Jev reader's two confident answers: one came from Sonnet's memory, and the Jev check scored it 0.06. The other was wrong, built on a document that fit some of the clues, and the Jev check scored it 0.55, so Jev was fooled too.</li>
+      <li>On all 50, the Jev reader declined 37, answered 8, and gave no answer on 5, where Sonnet spent its whole output budget reasoning.</li>
+      <li>Why this matters for Jev: Jev screen has scored every document before Sonnet is called. When no document scores high, a system could decline without calling Sonnet at all, which is cheaper and avoids answers from memory. We have not tested this. These runs did not save the scores, and Sonnet never saw them.</li>
+    </ul>
   </section>
 
   <section id="baseline">
@@ -382,6 +420,7 @@
 <footer>
   <span>BrowseComp-Plus</span>
   <span>Benchmark questions and answers are not published here</span>
+  <span>Independent research, not affiliated with Typesafe</span>
 </footer>
 </body>
 </html>

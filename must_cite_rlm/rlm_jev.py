@@ -409,11 +409,11 @@ def _answer_window(text: str, answer: str | None) -> str:
 def verify_gate(question: str, answer: str | None, cited: dict[str, str], meter: Meter) -> dict:
     """Post-hoc Jev gate, same for both arms: does the cited evidence support this proposed answer?
 
-    One Choice (act|review|abstain) whose p(act) is the gate score, and one Noul
-    per cited doc. No answer or no cited doc scores p_act 0 without a call.
+    One Choice (act|review|abstain) whose p(act) is the gate score. No answer or
+    no cited doc scores p_act 0 without a call.
     """
     if not answer or not cited:
-        return {"route": "abstain", "p_act": 0.0, "support": {}, "called": False}
+        return {"route": "abstain", "p_act": 0.0, "called": False}
     pairs = [(docid, _answer_window(text, answer)) for docid, text in list(cited.items())[:BATCH]]
     lines = [f"Question: {question}", f"Proposed answer: {answer}", ""] + [f"{docid}\n{text}" for docid, text in pairs]
     questions = {
@@ -426,22 +426,16 @@ def verify_gate(question: str, answer: str | None, cited: dict[str, str], meter:
                 "abstain": "The documents do not support the proposed answer.",
             },
         },
-        **{
-            docid: {"type": "noul", "instructions": f"Does document {docid} support the proposed answer?"}
-            for docid, _ in pairs
-        },
     }
     body = {"model": os.environ.get("TYPESAFE_DEFAULT_MODEL", "jev-latest"), "state": "\n".join(lines), "questions": questions}
     payload, latency_ms = live._jev_call(body)
     tokens = payload.get("usage", {}).get("input_tokens", 0)
     meter.add(tokens * live.JEV_INPUT_USD_PER_MTOKEN / 1_000_000, latency_ms)
-    answers = payload.get("answers", {})
-    verify = answers.get("verify", {})
+    verify = payload.get("answers", {}).get("verify", {})
     if "probabilities" not in verify:
         raise live.LiveError("Jev returned no Choice probabilities; the typesafe_sdk path drops them")
     return {
         "route": verify.get("choice"),
         "p_act": float(verify["probabilities"].get("act", 0.0)),
-        "support": {docid: float(answers[docid]["noul"]) for docid, _ in pairs if docid in answers},
         "called": True,
     }
