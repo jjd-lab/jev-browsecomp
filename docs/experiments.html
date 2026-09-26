@@ -254,7 +254,7 @@
         </div>
       </article>
     </div>
-    <p class="note">The Jev reader scored 3 points above the plain RLM on the fixed setup described below, with a 95% interval of −3 to +9, so the difference is not clear. On the first setup both scored 0.94.</p>
+    <p class="note">The Jev reader scored 3 points above the plain RLM, run on the fixed setup described below, with a 95% interval of −3 to +9, so the difference is not clear. On the first setup both scored 0.94.</p>
     <p class="note"><b>Why one call is enough:</b> Jev screen's top 8 held a document with the answer on 94 of 100 questions. BM25, a standard keyword ranking, managed 49. BrowseComp questions describe the answer through indirect clues, which keyword ranking misses.</p>
   </section>
 
@@ -343,7 +343,7 @@
         <tbody>
           <tr><th scope="row">Accuracy</th><td class="num">0.91</td><td class="num">0.90</td></tr>
           <tr><th scope="row">Ran out of turns</th><td class="num">8</td><td class="num">9</td></tr>
-          <tr><th scope="row">Hit the token budget</th><td class="num">3</td><td class="num">6</td></tr>
+          <tr><th scope="row">Hit the 500,000-token budget</th><td class="num">3</td><td class="num">6</td></tr>
           <tr><th scope="row">No answer</th><td class="num">6</td><td class="num">8</td></tr>
           <tr><th scope="row">Cost per question</th><td class="num">$0.35</td><td class="num">$0.42</td></tr>
           <tr><th scope="row">Time per question</th><td class="num">143 s</td><td class="num">152 s</td></tr>
@@ -352,7 +352,7 @@
     </div>
     <ul class="points">
       <li>With the fixed setup, the RLM with Jev tools went from 10 points behind the plain RLM to 1 point behind, but still cost more, $0.42 per question against $0.35. Inside the RLM, Jev added cost without adding accuracy. In front of one call, as the Jev reader, it cut cost.</li>
-      <li>On the 22 questions where the RLM with Jev tools ran out of turns in the first setup, the plain RLM got 17 right and the Jev-tools version 7 in that setup. The shortlist version got 13 at $0.66 each, and the Jev-tools version in the fixed setup got 13 at $1.01 each.</li>
+      <li>On the 22 questions where the RLM with Jev tools ran out of turns in the first setup, the plain RLM got 17 right and the Jev-tools version 7 in that setup. A version whose Jev tool returned a ready-to-read shortlist in one call, to save turns, got 13 at $0.66 each, and the Jev-tools version in the fixed setup got 13 at $1.01 each.</li>
       <li>Rerunning the same questions moves the count by about 3 either way.</li>
     </ul>
   </section>

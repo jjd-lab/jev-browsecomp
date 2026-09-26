@@ -4,7 +4,7 @@ Research harness. It tests whether cheap typed decisions from Jev (Typesafe; Cho
 
 - Status, locks, and results: [`results/FINDINGS.md`](results/FINDINGS.md)
 - How it works, conventions, experiment ledger, glossary: [`wiki/index.md`](wiki/index.md)
-- Phase 1 BrowseComp-Plus page, with questions and answers left out: [`docs/experiments.html`](docs/experiments.html)
+- Phase 1 BrowseComp-Plus page, with questions and answers left out: [`docs/experiments.html`](docs/experiments.html), published at <https://jjd-lab.github.io/jev-browsecomp/>
 
 The RLM method is Zhang, Kraska, and Khattab ([arXiv:2512.24601](https://arxiv.org/abs/2512.24601)). Phase 1 uses their `rlms` package (0.1.3) unmodified, with local client patches in `must_cite_rlm/rlm_jev.py`.
 
