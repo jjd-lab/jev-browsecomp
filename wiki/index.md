@@ -7,7 +7,7 @@ Start here. Maintenance rules are in [SCHEMA.md](SCHEMA.md) and history is in [l
 
 ## Experiments
 - [Experiment ledger](docs/experiments.md): every finished experiment, with its run size, what Jev was compared against, the verdict, and the lesson.
-- [Phase 1, BrowseComp-Plus](../docs/experiments.html): the locked Phase 1 results as a page. Questions and answers are left out.
+- [Phase 1, BrowseComp-Plus](../docs/experiments.html): the locked Phase 1 results as a page, published at <https://jjd-lab.github.io/jev-browsecomp/>. Questions and answers are left out.
 
 ## Architecture
 - [Harness architecture](docs/architecture.md): ids and the Jev decode, Phase 0 arms, corpus arms R/H/N, and the Phase 1 RLM with Jev tools.

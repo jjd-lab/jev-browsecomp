@@ -240,7 +240,7 @@
         </div>
       </article>
     </div>
-    <p class="note">Reader arm J scored 3 points above RLM arm A on the fixed setup described below, with a 95% interval of −3 to +9, so the difference is not clear. On the first setup both scored 0.94. On the 30 held-out questions both were run on, where no document supports an answer, RLM arm A declined 19 and reader arm J declined 25. RLM arm A never answered with 50% or higher confidence; reader arm J did twice.</p>
+    <p class="note">Reader arm J scored 3 points above RLM arm A on the fixed setup described below, with a 95% interval of −3 to +9, so the difference is not clear. On the first setup both scored 0.94. On the 30 held-out questions both were run on, where no document supports an answer, RLM arm A declined 19 and reader arm J declined 25. Asked to state a confidence, RLM arm A never said 50% or more; reader arm J did twice, once answering from memory and once wrong.</p>
   </section>
 
   <section id="baseline">
@@ -368,6 +368,16 @@
       <li>On the 22 questions where arm B ran out of turns in the first setup, arm A got 17 right and arm B got 7 in that setup. The one-call shortlist got 13 at $0.66 each, and arm B in the fixed setup got 13 at $1.01 each.</li>
       <li>Rerunning the same questions moves the count by about 3 either way.</li>
       <li>The whole study cost $208, and Jev was $18 of it, or 9%.</li>
+    </ul>
+  </section>
+  <section id="limits">
+    <h2>Limitations</h2>
+    <ul class="points">
+      <li><b>Scale.</b> Jev screen scores every document, so its cost grows with the number of documents. At 1,000 documents it was $0.09 of the reader's $0.13 per question. At 100,000 documents it would be about $9. A larger corpus needs a cheap first search, by keywords or embeddings, to cut it to about 1,000 documents before Jev. Jev can only pick from what that search keeps, and we have not tested this at that scale.</li>
+      <li><b>An easy haystack.</b> Each question's 1,000 documents always include its answer documents, and the rest are random. In a real corpus, many documents can look close to the answer, which would make both searching and screening harder.</li>
+      <li><b>No other retriever.</b> We compared Jev screen with BM25 keyword ranking only. An embedding retriever might also put the answer documents in the top 8.</li>
+      <li><b>Stated confidence is self-reported.</b> Sonnet writes its own confidence as asked by the benchmark's answer format. On 2 of the 30 shared held-out questions, the reader answered at 50% or more with no supporting document.</li>
+      <li><b>Small samples.</b> 100 main and 30 to 50 held-out questions, one run each, scored by a Sonnet 5 judge. Rerunning moves counts by about 3.</li>
     </ul>
   </section>
 </main>

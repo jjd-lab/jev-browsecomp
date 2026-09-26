@@ -77,6 +77,6 @@ Letters repeat across phases, so always name the family: "pack arm C", "RLM arm 
 | Pilot | A few questions to check that a setup runs. Never a result. |
 | Probe | A small exploratory run to decide whether a full run is worth it. Reported with CIs, not as a verdict. |
 | Full run | A run whose comparison rules were written down before it started. |
-| Harness v1 / v2 | RLM limits. v1: 20 turns, and the final step could return code. v2: 30 turns and a no-code final turn. |
+| Harness v1 / v2 | RLM limits. v1: 20 turns, and the final step could return code. v2: 30 turns and a no-code final turn. The public page calls them the "first setup" and the "fixed setup". |
 | Capped rerun | A question that hit the v1 turn cap, rerun under v2 (`*.capfix.jsonl`). |
 | Extension | More questions added to a finished run after its results were seen. Reported next to the original, never in place of it. |
