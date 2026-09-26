@@ -17,7 +17,6 @@
     --line: #e2dfd8;
     --accent: #3d6a96;
     --accent-soft: #e6edf4;
-    --win: #3d7a5a;
   }
   @media (prefers-color-scheme: dark) {
     :root {
@@ -28,7 +27,6 @@
       --line: #34332f;
       --accent: #8fb3d6;
       --accent-soft: #22303c;
-      --win: #8cc4a4;
     }
   }
   * { box-sizing: border-box; }
@@ -109,30 +107,6 @@
   .metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; }
   .metrics b { display: block; font-size: 1.25rem; font-weight: 600; }
   .metrics small { font-size: 0.75rem; color: var(--muted); }
-  .sittings { list-style: none; margin: 1rem 0 0; padding: 0; }
-  .sittings li {
-    display: grid;
-    grid-template-columns: 2.5rem 1fr auto;
-    gap: 0.25rem 1rem;
-    align-items: baseline;
-    padding: 1rem 0;
-    border-top: 1px solid var(--line);
-  }
-  .sittings li:last-child { border-bottom: 1px solid var(--line); }
-  .sittings .num { font-size: 0.85rem; font-weight: 500; color: var(--muted); }
-  .sittings h3 { margin: 0; font-size: 1rem; font-weight: 600; }
-  .sittings p { margin: 0.2rem 0 0; color: var(--muted); font-size: 0.95rem; }
-  .tag {
-    justify-self: start;
-    padding: 0.15rem 0.6rem;
-    border-radius: 999px;
-    background: var(--surface);
-    font-size: 0.78rem;
-    font-weight: 500;
-    color: var(--muted);
-    white-space: nowrap;
-  }
-  .tag.win { color: var(--win); }
   table { width: 100%; border-collapse: collapse; font-size: 0.92rem; }
   th, td { padding: 0.7rem 0.6rem; text-align: left; border-bottom: 1px solid var(--line); white-space: nowrap; }
   th { font-size: 0.8rem; font-weight: 500; color: var(--muted); }
@@ -178,8 +152,6 @@
     .figures { gap: 0.5rem; }
     .figures article { padding: 0.9rem 0.8rem; }
     .figures span { font-size: 0.75rem; }
-    .sittings li { grid-template-columns: 2rem 1fr; }
-    .tag { grid-column: 2; margin-top: 0.4rem; }
   }
 </style>
 </head>
@@ -282,6 +254,7 @@
       </article>
     </div>
     <p class="note">The Jev reader scored 3 points above the plain RLM on the fixed setup described below, with a 95% interval of −3 to +9, so the difference is not clear. On the first setup both scored 0.94.</p>
+    <p class="note"><b>Why one call is enough:</b> Jev screen's top 8 held a document with the answer on 94 of 100 questions. BM25, a standard keyword ranking, managed 49. BrowseComp questions describe the answer through indirect clues, which keyword ranking misses.</p>
   </section>
 
   <section id="held-out">
@@ -307,6 +280,7 @@
     <ul class="points">
       <li>The Jev reader declined 25 of 30 against 19, and 37 of all 50, taking 16 seconds instead of 4.6 minutes.</li>
       <li>Its two confident answers came from Sonnet filling a gap from memory, since one call over 8 documents cannot search further. The Jev check caught one (0.06) and missed the other (0.55). On the same two, the plain RLM said 45% on one and searched, found nothing, and declined on the other.</li>
+      <li>The Jev check did not beat Sonnet's own confidence at spotting wrong answers. On the plain RLM's answers, AUROC was 0.87 against 0.93, and 0.910 against 0.955 with 20 held-out questions added (1.0 is perfect, 0.5 a coin flip). Sonnet rarely answers confidently without support, so the check has little to catch.</li>
       <li><b>Potential for abstaining, untested:</b> Jev screen gives each document a probability that it supports the question. If even the top 8 all score low, the Jev reader could decline before Sonnet is called.</li>
     </ul>
   </section>
@@ -330,76 +304,6 @@
       <li>These are context, not a head-to-head. The paper and this study each drew 150 questions at random from the same 830. The paper did not publish its list, so we do not know how many questions overlap, and the random filler documents differ too. The paper also ran GPT-5 with a GPT-4.1 judge, where we ran Sonnet 5 with a Sonnet 5 judge. So our scores cannot be ranked against these.</li>
       <li>The public BrowseComp-Plus leaderboard searches a 100,000-document corpus instead, so we do not compare against it.</li>
     </ul>
-  </section>
-
-  <section id="sittings">
-    <h2>What each run showed</h2>
-    <ol class="sittings">
-      <li>
-        <span class="num">01</span>
-        <div>
-          <h3>Jev tools lost the first main run.</h3>
-          <p>With a limit of 20 turns on 100 questions, the RLM with Jev tools scored 0.84 against the plain RLM's 0.94 (p = 0.002, so very unlikely to be chance) and cost $0.34 against $0.30. Each Jev call used up a turn, so it ran out of turns more often.</p>
-        </div>
-        <span class="tag loss">Jev tools worse</span>
-      </li>
-      <li>
-        <span class="num">02</span>
-        <div>
-          <h3>The Jev check lost on the main questions.</h3>
-          <p>The Jev check asks Jev whether the documents an answer cites support that answer. Its score is Jev's probability of act. Sonnet also states its own confidence with each answer. We measured how well each score separates wrong answers from right ones with AUROC, where 1.0 is perfect and 0.5 is a coin flip. On the plain RLM's answers, the Jev check scored 0.87 and Sonnet's stated confidence 0.93.</p>
-        </div>
-        <span class="tag loss">Stated confidence wins</span>
-      </li>
-      <li>
-        <span class="num">03</span>
-        <div>
-          <h3>A one-call shortlist tool fixed part of it.</h3>
-          <p>We replaced Jev screen with a shortlist tool that screens every document and returns the top few in one call, to save turns. On the 22 questions where the RLM with Jev tools ran out of turns, this version got 13 right. The original got 7, and the plain RLM got 17.</p>
-        </div>
-        <span class="tag loss">Partial fix</span>
-      </li>
-      <li>
-        <span class="num">04</span>
-        <div>
-          <h3>Fixing the run setup closed most of the gap.</h3>
-          <p>The fix allows 30 turns and, when turns run out, tells Sonnet to stop writing code and answer. The plain RLM scored 0.91 and the RLM with Jev tools 0.90, at $0.35 and $0.42 per question. The Jev tools still added cost.</p>
-        </div>
-        <span class="tag loss">Tie, Jev tools cost more</span>
-      </li>
-      <li>
-        <span class="num">05</span>
-        <div>
-          <h3>A small trial of the Jev reader.</h3>
-          <p>On 30 random questions, the Jev reader scored 0.87 against the plain RLM's 0.90, at $0.13 against $0.33 and 19 s against 139 s. On 15 hard questions, where an RLM had run out of turns in the first setup, both scored 0.80. With only 30 questions, the interval still allowed a loss of about 17 points.</p>
-        </div>
-        <span class="tag">Trial</span>
-      </li>
-      <li>
-        <span class="num">06</span>
-        <div>
-          <h3>The Jev reader on all 100 questions.</h3>
-          <p>The Jev reader scored 0.94 against the plain RLM's 0.91, at $0.13 against $0.35 per question and 21 s against 143 s. The 62 questions outside the trial show the same pattern. When none of the top 8 documents is relevant, the reader says the documents cannot settle the question.</p>
-        </div>
-        <span class="tag win">Cheaper and faster</span>
-      </li>
-      <li>
-        <span class="num">07</span>
-        <div>
-          <h3>Sonnet declines on its own when nothing supports an answer.</h3>
-          <p>Over the plain RLM's 100 answers plus 20 held-out questions, the Jev check had an AUROC of 0.910 against 0.955 for stated confidence, and the 95% interval favored stated confidence. With 30 held-out questions the AUROCs were 0.912 and 0.958. On all 30, the plain RLM declined or stated under 50% confidence, so the Jev check had little to catch.</p>
-        </div>
-        <span class="tag loss">Stated confidence wins</span>
-      </li>
-      <li>
-        <span class="num">08</span>
-        <div>
-          <h3>The Jev screen is why one call is enough.</h3>
-          <p>This check needed no API calls. BM25, a standard keyword ranking, put a document holding the answer in its top 8 on 49 of 100 questions. Jev screen did on 94. BrowseComp questions describe the answer through indirect clues, which keyword ranking misses. We did not run a reader on BM25's top 8, or an embedding retriever.</p>
-        </div>
-        <span class="tag win">Jev screen wins</span>
-      </li>
-    </ol>
   </section>
 
   <section id="harness">
