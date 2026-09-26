@@ -1,0 +1,12 @@
+# Illegal drug trade in the Philippines
+
+Wikipedia passage frozen in HotpotQA dev distractor v1. CC BY-SA 4.0.
+See fixtures/LICENSE.txt.
+
+## Illegal drug trade in the Philippines
+
+The prevalence of drug use in the Philippines is lower than the global average, according to the United Nations Office on Drugs and Crime (UNODC).
+
+Two of the most used and valuable illegal drugs in the country are methamphetamine hydrochloride (shabu) and marijuana.
+
+Ephedrine and methylenedioxy methamphetamine are also among the list of illegal drugs that are of great concern to the authorities.

@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Jev on BrowseComp-Plus</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f7f6f3;
+    --surface: #efede8;
+    --ink: #2b2a27;
+    --muted: #6f6c66;
+    --line: #e2dfd8;
+    --accent: #3d6a96;
+    --accent-soft: #e6edf4;
+    --win: #3d7a5a;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1b1b1a;
+      --surface: #242422;
+      --ink: #e6e3dc;
+      --muted: #a09c94;
+      --line: #34332f;
+      --accent: #8fb3d6;
+      --accent-soft: #22303c;
+      --win: #8cc4a4;
+    }
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    color: var(--ink);
+    background: var(--bg);
+    font-family: Inter, -apple-system, "Segoe UI", system-ui, sans-serif;
+    font-size: 1rem;
+    line-height: 1.6;
+    font-feature-settings: "tnum" 1, "cv11" 1;
+  }
+  a { color: inherit; }
+  .mast, main, .cover, footer { width: min(60rem, calc(100% - 32px)); margin: 0 auto; }
+  .mast {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem 1rem;
+    padding: 1.1rem 0;
+    border-bottom: 1px solid var(--line);
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+  .mast > span:first-child { color: var(--ink); font-weight: 600; }
+  .mast a { text-decoration: none; }
+  .mast a:hover { color: var(--accent); }
+  .cover { padding: 4rem 0 3rem; }
+  .eyebrow { margin: 0 0 1rem; font-size: 0.85rem; font-weight: 500; color: var(--accent); }
+  h1 {
+    margin: 0;
+    max-width: 18ch;
+    font-size: clamp(2.1rem, 6vw, 3.4rem);
+    font-weight: 600;
+    line-height: 1.1;
+    letter-spacing: -0.025em;
+  }
+  h1 em { font-style: normal; color: var(--accent); }
+  .deck { max-width: 38rem; margin: 1.25rem 0 0; font-size: 1.1rem; color: var(--muted); }
+  .figures {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-top: 2.5rem;
+  }
+  .figures article { padding: 1.1rem 1.2rem; background: var(--surface); border-radius: 12px; }
+  .figures strong {
+    display: block;
+    font-size: clamp(1.6rem, 5vw, 2.5rem);
+    font-weight: 600;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+  }
+  .figures span { display: block; margin-top: 0.35rem; font-size: 0.85rem; color: var(--muted); }
+  section { padding: 3rem 0; border-top: 1px solid var(--line); }
+  .cover { border-top: 0; }
+  h2 { margin: 0 0 1rem; font-size: clamp(1.4rem, 3.5vw, 1.8rem); font-weight: 600; line-height: 1.25; letter-spacing: -0.015em; }
+  .lede { max-width: 42rem; margin: 0; color: var(--muted); }
+  .looks { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 1.75rem; }
+  .look {
+    padding: 1.25rem;
+    background: var(--surface);
+    border: 1px solid transparent;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 1.25rem;
+  }
+  .look.featured { background: var(--accent-soft); border-color: var(--accent); }
+  .look .mark { font-size: 0.8rem; font-weight: 500; color: var(--muted); }
+  .look.featured .mark { color: var(--accent); }
+  .look h3 { margin: 0.35rem 0 0; font-size: 1.2rem; font-weight: 600; line-height: 1.3; }
+  .look p { margin: 0.5rem 0 0; font-size: 0.95rem; color: var(--muted); }
+  .metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; }
+  .metrics b { display: block; font-size: 1.25rem; font-weight: 600; }
+  .metrics small { font-size: 0.75rem; color: var(--muted); }
+  .sittings { list-style: none; margin: 1rem 0 0; padding: 0; }
+  .sittings li {
+    display: grid;
+    grid-template-columns: 2.5rem 1fr auto;
+    gap: 0.25rem 1rem;
+    align-items: baseline;
+    padding: 1rem 0;
+    border-top: 1px solid var(--line);
+  }
+  .sittings li:last-child { border-bottom: 1px solid var(--line); }
+  .sittings .num { font-size: 0.85rem; font-weight: 500; color: var(--muted); }
+  .sittings h3 { margin: 0; font-size: 1rem; font-weight: 600; }
+  .sittings p { margin: 0.2rem 0 0; color: var(--muted); font-size: 0.95rem; }
+  .tag {
+    justify-self: start;
+    padding: 0.15rem 0.6rem;
+    border-radius: 999px;
+    background: var(--surface);
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+  .tag.win { color: var(--win); }
+  table { width: 100%; border-collapse: collapse; font-size: 0.92rem; }
+  th, td { padding: 0.7rem 0.6rem; text-align: left; border-bottom: 1px solid var(--line); white-space: nowrap; }
+  th { font-size: 0.8rem; font-weight: 500; color: var(--muted); }
+  th.num, td.num { text-align: right; }
+  td.num { font-weight: 500; }
+  .note { margin-top: 1.25rem; max-width: 42rem; font-size: 0.95rem; color: var(--muted); }
+  .tables { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 1.5rem; }
+  .compare caption { text-align: left; font-weight: 600; font-size: 0.95rem; padding-bottom: 0.4rem; }
+  .compare th[scope="row"] { font-size: 0.92rem; font-weight: 400; color: var(--ink); white-space: normal; }
+  .compare td, .compare thead th { width: 5.5rem; }
+  .compare th[scope="row"], .compare thead th:first-child { padding-left: 0; }
+  .points { margin: 1.5rem 0 0; padding-left: 1.2rem; max-width: 42rem; color: var(--muted); font-size: 0.95rem; }
+  .points li { margin: 0.35rem 0; }
+  footer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.5rem 1rem;
+    padding: 1.5rem 0 2.5rem;
+    border-top: 1px solid var(--line);
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+  @media (max-width: 720px) {
+    .cover { padding: 2.5rem 0 2rem; }
+    .looks, .tables { grid-template-columns: 1fr; }
+    .figures { gap: 0.5rem; }
+    .figures article { padding: 0.9rem 0.8rem; }
+    .figures span { font-size: 0.75rem; }
+    .sittings li { grid-template-columns: 2rem 1fr; }
+    .tag { grid-column: 2; margin-top: 0.4rem; }
+  }
+</style>
+</head>
+<body>
+<header class="mast">
+  <span>Jev on BrowseComp-Plus</span>
+  <a href="https://github.com/jjd-lab/jev-browsecomp">GitHub</a>
+</header>
+
+<section class="cover" id="result">
+  <p class="eyebrow">100 questions · 1,000 documents each</p>
+  <h1><em>Jev</em> picks the documents. One call answers.</h1>
+  <p class="deck">On BrowseComp-Plus, the Jev screen picks 8 of 1,000 documents and one Sonnet 5 call answers from them. This reader matches the accuracy of a Sonnet 5 Recursive Language Model, or RLM, at $0.13 per question instead of $0.35, and 21 seconds instead of 143.</p>
+  <div class="figures">
+    <article>
+      <strong>0.94</strong>
+      <span>Accuracy, Jev-first reader</span>
+    </article>
+    <article>
+      <strong>$0.13</strong>
+      <span>Per question, against $0.35</span>
+    </article>
+    <article>
+      <strong>7×</strong>
+      <span>Faster, 21 s against 143 s</span>
+    </article>
+  </div>
+</section>
+
+<main>
+  <section id="arms">
+    <h2>The three arms</h2>
+    <p class="lede">Every question comes with 1,000 BrowseComp-Plus documents, about 7 to 9 million tokens, including its gold and evidence documents. Sonnet 5 is the root model, Haiku 4.5 answers sub-calls, and a Sonnet 5 judge scores each answer. We call a difference only when the whole 95% paired bootstrap interval sits on one side of zero.</p>
+    <div class="looks">
+      <article class="look">
+        <div>
+          <div class="mark">RLM arm A, plain</div>
+          <h3>Sonnet searches in a REPL.</h3>
+          <p>Sonnet 5 writes Python over the documents and sends sub-questions to Haiku. It stops at an answer or at the turn cap. It never calls Jev.</p>
+        </div>
+        <div class="metrics">
+          <div><b>0.91</b><small>Accuracy</small></div>
+          <div><b>$0.35</b><small>Cost</small></div>
+          <div><b>143s</b><small>Time</small></div>
+        </div>
+      </article>
+      <article class="look">
+        <div>
+          <div class="mark">RLM arm B, Jev tools</div>
+          <h3>The same RLM, with Jev as tools.</h3>
+          <p>Sonnet can also call the Jev screen and the Jev decide. Those calls use root turns, so arm B costs more for the same accuracy.</p>
+        </div>
+        <div class="metrics">
+          <div><b>0.90</b><small>Accuracy</small></div>
+          <div><b>$0.42</b><small>Cost</small></div>
+          <div><b>152s</b><small>Time</small></div>
+        </div>
+      </article>
+      <article class="look featured">
+        <div>
+          <div class="mark">Reader arm J, Jev-first</div>
+          <h3>Jev screens, then one call.</h3>
+          <p>Jev scores all 1,000 documents. The top 8 go to a single Sonnet 5 call. There is no search loop.</p>
+        </div>
+        <div class="metrics">
+          <div><b>0.94</b><small>Accuracy</small></div>
+          <div><b>$0.13</b><small>Cost</small></div>
+          <div><b>21s</b><small>Time</small></div>
+        </div>
+      </article>
+    </div>
+    <p class="note">Reader arm J scored 3 points above RLM arm A on the fixed harness, with a 95% interval of −3 to +9, so the difference is not clear. On the original harness both scored 0.94. On the 50 held-out questions, where no document supports an answer, reader arm J declined on 37 and gave no answer on 5.</p>
+  </section>
+
+  <section id="sittings">
+    <h2>What each run showed</h2>
+    <ol class="sittings">
+      <li>
+        <span class="num">01</span>
+        <div>
+          <h3>Haiku 4.5 could not drive the RLM.</h3>
+          <p>In the Haiku-root pilot, most runs hit 30 turns or 15 minutes without an answer.</p>
+        </div>
+        <span class="tag loss">Haiku fails</span>
+      </li>
+      <li>
+        <span class="num">02</span>
+        <div>
+          <h3>Sonnet 5 could.</h3>
+          <p>In a 10-question pilot, both RLM arms answered 9 of 10 at about $0.25 to $0.30 per question. The RLM paper reports 91.3% at $0.99 per question for GPT-5, on its own sample of questions.</p>
+        </div>
+        <span class="tag win">Works</span>
+      </li>
+      <li>
+        <span class="num">03</span>
+        <div>
+          <h3>Jev tools lost the first main run.</h3>
+          <p>On harness v1 with 100 questions, RLM arm B scored 0.84 against arm A's 0.94, p = 0.002, and cost $0.34 against $0.30. Jev calls used root turns, so arm B hit the 20-turn cap more often.</p>
+        </div>
+        <span class="tag loss">Arm B worse</span>
+      </li>
+      <li>
+        <span class="num">04</span>
+        <div>
+          <h3>The Jev check lost on the main questions.</h3>
+          <p>The Jev check asks whether the cited documents support the answer. On RLM arm A's answers it ranked errors worse than Sonnet's stated confidence, with an AUROC of 0.87 against 0.93.</p>
+        </div>
+        <span class="tag loss">Stated confidence wins</span>
+      </li>
+      <li>
+        <span class="num">05</span>
+        <div>
+          <h3>A one-call shortlist tool fixed part of it.</h3>
+          <p>On the 22 questions where arm B hit the cap, RLM arm B2 with the shortlist tool got 13 right. The original arm B got 7, and arm A got 17.</p>
+        </div>
+        <span class="tag loss">Partial fix</span>
+      </li>
+      <li>
+        <span class="num">06</span>
+        <div>
+          <h3>Harness v2 closed most of the gap.</h3>
+          <p>Harness v2 allows 30 turns and makes the final turn answer without code. Arm A scored 0.91 and arm B 0.90, at $0.35 and $0.42 per question. The Jev tools still added cost.</p>
+        </div>
+        <span class="tag loss">Tie, B costs more</span>
+      </li>
+      <li>
+        <span class="num">07</span>
+        <div>
+          <h3>A probe of reader arm J.</h3>
+          <p>On 30 random questions, reader arm J scored 0.87 against arm A's 0.90, at $0.13 against $0.33 and 19 s against 139 s. On 15 hard questions both scored 0.80. With only 30 questions, the interval still allowed a loss of about 17 points.</p>
+        </div>
+        <span class="tag">Probe</span>
+      </li>
+      <li>
+        <span class="num">08</span>
+        <div>
+          <h3>Reader arm J on all 100 questions.</h3>
+          <p>Reader arm J scored 0.94 against arm A's 0.91, at $0.13 against $0.35 per question and 21 s against 143 s. The 62 questions outside the probe show the same pattern. When none of the top 8 documents is relevant, the reader says the documents cannot settle the question.</p>
+        </div>
+        <span class="tag win">Cheaper and faster</span>
+      </li>
+      <li>
+        <span class="num">09</span>
+        <div>
+          <h3>Sonnet declines on its own when nothing supports an answer.</h3>
+          <p>Over arm A's 100 answers plus 20 held-out questions, the Jev check had an AUROC of 0.910 against 0.955 for stated confidence. The AURC difference was +0.016, with a 95% interval of +0.003 to +0.037. With 30 held-out questions the AUROCs were 0.912 and 0.958. On all 30, arm A declined or stated under 50% confidence.</p>
+        </div>
+        <span class="tag loss">Stated confidence wins</span>
+      </li>
+      <li>
+        <span class="num">10</span>
+        <div>
+          <h3>The Jev screen is why one call is enough.</h3>
+          <p>This check needed no API calls. BM25's top 8 held a gold document on 49 of 100 questions, and the Jev screen's top 8 on 94. BrowseComp questions describe the answer through indirect clues, which keyword ranking misses. We did not run a BM25 reader or an embedding retriever.</p>
+        </div>
+        <span class="tag win">Jev screen wins</span>
+      </li>
+    </ol>
+  </section>
+
+  <section id="harness">
+    <h2>The harness, not Jev, caused most of the gap</h2>
+    <p class="lede">The same 100 questions, run on both harness versions. RLM arm A is the plain RLM, and arm B adds the Jev tools.</p>
+    <div class="tables">
+      <table class="compare">
+        <caption>Harness v1, 20 turns</caption>
+        <thead><tr><th></th><th class="num">Arm A</th><th class="num">Arm B</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Accuracy</th><td class="num">0.94</td><td class="num">0.84</td></tr>
+          <tr><th scope="row">Hit the turn cap</th><td class="num">17</td><td class="num">22</td></tr>
+          <tr><th scope="row">No answer</th><td class="num">7</td><td class="num">14</td></tr>
+          <tr><th scope="row">Cost per question</th><td class="num">$0.30</td><td class="num">$0.34</td></tr>
+          <tr><th scope="row">Time per question</th><td class="num">132 s</td><td class="num">142 s</td></tr>
+        </tbody>
+      </table>
+      <table class="compare">
+        <caption>Harness v2, 30 turns and a final turn without code</caption>
+        <thead><tr><th></th><th class="num">Arm A</th><th class="num">Arm B</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Accuracy</th><td class="num">0.91</td><td class="num">0.90</td></tr>
+          <tr><th scope="row">Hit the turn cap</th><td class="num">8</td><td class="num">9</td></tr>
+          <tr><th scope="row">Token-limit stops</th><td class="num">3</td><td class="num">6</td></tr>
+          <tr><th scope="row">No answer</th><td class="num">6</td><td class="num">8</td></tr>
+          <tr><th scope="row">Cost per question</th><td class="num">$0.35</td><td class="num">$0.42</td></tr>
+          <tr><th scope="row">Time per question</th><td class="num">143 s</td><td class="num">152 s</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <ul class="points">
+      <li>Harness v2 moved arm B from 10 points behind arm A to 1 point behind.</li>
+      <li>The Jev tools still cost more, $0.42 per question against $0.35.</li>
+      <li>On the 22 questions where arm B hit the v1 cap, arm A on v1 got 17 right, arm B on v1 got 7, the one-call shortlist got 13 at $0.66 each, and arm B on v2 got 13 at $1.01 each.</li>
+      <li>Rerunning the same questions moves the count by about 3 either way.</li>
+      <li>The whole study cost $208, and Jev was $18 of it, or 9%.</li>
+    </ul>
+  </section>
+</main>
+<footer>
+  <span>BrowseComp-Plus</span>
+  <span>Benchmark questions and answers are not published here</span>
+</footer>
+</body>
+</html>

@@ -1,0 +1,12 @@
+# Winner (band)
+
+Wikipedia passage frozen in HotpotQA dev distractor v1. CC BY-SA 4.0.
+See fixtures/LICENSE.txt.
+
+## Winner (band)
+
+Winner (Hangul: 위너), often stylized as WINNER, is a South Korean boy group formed in 2013 by YG Entertainment and debuted in 2014.
+
+It currently consists of four members, Jinwoo, Seunghoon, Mino and Seungyoon.
+
+Originally a five-piece group with Taehyun, who later departed from the group in November 2016.

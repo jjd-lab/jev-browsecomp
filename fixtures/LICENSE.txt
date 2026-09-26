@@ -1,0 +1,40 @@
+Corpus license
+
+The markdown files in fixtures/corpus, the questions in fixtures/gold.jsonl
+other than the six abstain rows, and the HotpotQA answer strings recorded in
+fixtures/provenance.jsonl are a small slice of HotpotQA dev distractor v1.
+
+HotpotQA: Zhilin Yang, Peng Qi, Saizheng Zhang, Yoshua Bengio, William W. Cohen,
+Ruslan Salakhutdinov, and Christopher D. Manning. HotpotQA: A Dataset for
+Diverse, Explainable Multi-hop Question Answering. EMNLP 2018.
+https://hotpotqa.github.io/
+
+HotpotQA is distributed under CC BY-SA 4.0:
+https://creativecommons.org/licenses/by-sa/4.0/
+
+Passage text is Wikipedia content as frozen in that HotpotQA dump, credited to
+Wikipedia contributors, also under CC BY-SA 4.0. Article titles are in
+fixtures/provenance.jsonl. Those titles identify the Wikipedia articles. The
+sentences can differ from the live article: HotpotQA does not ship a revision
+id. https://en.wikipedia.org/wiki/Wikipedia:Text_of_the_Creative_Commons_Attribution-ShareAlike_4.0_International_License
+
+Changes made here:
+- Each supporting article is one markdown file. The title is the only section heading.
+- Leading and trailing whitespace on each sentence was removed.
+- Sentences containing a double quote, a newline, or the characters {' were omitted so a cited span stays one mechanical quote.
+- A birth-date stub sentence shorter than 40 characters and containing "(bef." was omitted.
+- Node ids are assigned by this repo from the title. Kept sentence wording was not rewritten.
+- Only the two supporting articles for each selected question are included. The eight HotpotQA distractor paragraphs per question are not included.
+- Bridge and easy gold ids are the one supporting sentence that contains the HotpotQA answer string. Multi gold ids are both supporting sentences.
+- Six abstain questions were written for this repo. They are not HotpotQA items. They are not Wikipedia text.
+
+The slice was cut from hotpot_dev_distractor_v1.json, sha256
+e3da074df24e8369009918aa5cdbdd254dadcde4c63f7569d36afd6f2268caa8.
+Canonical file: http://curtis.ml.cmu.edu/datasets/hotpot/hotpot_dev_distractor_v1.json
+
+This is not the full HotpotQA dataset. The code under must_cite_rlm is not
+covered by the CC BY-SA notice above.
+
+Bridge rows were kept because, on this joint corpus, the stub section walk
+cites the answer sentence and flat top-1 does not. That selection is documented
+in scripts/build_hotpot_slice.py. It is not a random HotpotQA sample.

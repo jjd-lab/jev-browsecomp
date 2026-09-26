@@ -1,0 +1,10 @@
+[project]
+name = "must-cite-rlm"
+version = "0.0.1"
+description = "Phase 0 must-cite scoreboard for arms A, B, and C."
+requires-python = ">=3.11"
+readme = "README.md"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]

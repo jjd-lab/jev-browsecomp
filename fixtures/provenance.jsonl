@@ -1,0 +1,23 @@
+{"id": "b01", "role": "bridge", "hotpot_id": "5ae792f55542994a481bbdae", "answer": "Alfred Joel Horford Reynoso", "titles": ["2007–08 Atlanta Hawks season", "Al Horford"], "policy": "answer-bearing supporting sentence"}
+{"id": "b02", "role": "bridge", "hotpot_id": "5abd82dc5542993062266cb6", "answer": "due to the onset and progression of Alzheimer's disease", "titles": ["Denver Broncos", "Pat Bowlen"], "policy": "answer-bearing supporting sentence"}
+{"id": "b03", "role": "bridge", "hotpot_id": "5a8bd43c5542997f31a41dd6", "answer": "an Otto Dix painting", "titles": ["The Story of Dida Ibsen", "Anita Berber"], "policy": "answer-bearing supporting sentence"}
+{"id": "b04", "role": "bridge", "hotpot_id": "5ab926bc554299131ca42285", "answer": "win world titles in four weight classes", "titles": ["Román González (boxer)", "Alexis Argüello"], "policy": "answer-bearing supporting sentence"}
+{"id": "b05", "role": "bridge", "hotpot_id": "5abab36455429955dce3eed1", "answer": "The song also features rap parts from Darryl, RB Djan and Ryan Babel.", "titles": ["Wij zijn Ajax", "Ryan Babel"], "policy": "answer-bearing supporting sentence"}
+{"id": "b06", "role": "bridge", "hotpot_id": "5ae748d1554299572ea547b0", "answer": "1901", "titles": ["Wayne Garland", "Baltimore Orioles"], "policy": "answer-bearing supporting sentence"}
+{"id": "b07", "role": "bridge", "hotpot_id": "5ab953a45542996be202047f", "answer": "1883", "titles": ["Rotrou III, Count of Perche", "Percheron"], "policy": "answer-bearing supporting sentence"}
+{"id": "b08", "role": "bridge", "hotpot_id": "5a8a2d2155429930ff3c0cdc", "answer": "Academy Award for Best Animated Feature", "titles": ["House of Many Ways", "Howl's Moving Castle"], "policy": "answer-bearing supporting sentence"}
+{"id": "b09", "role": "bridge", "hotpot_id": "5a745e1455429929fddd83fd", "answer": "Ephedrine", "titles": ["Illegal drug trade in the Philippines", "Ephedrine"], "policy": "answer-bearing supporting sentence"}
+{"id": "b10", "role": "bridge", "hotpot_id": "5ab7f7465542993667794071", "answer": "British Bristol Olympus turbojet", "titles": ["Saab 36", "Avro Vulcan"], "policy": "answer-bearing supporting sentence"}
+{"id": "b11", "role": "bridge", "hotpot_id": "5abd94525542992ac4f382d2", "answer": "YG Entertainment", "titles": ["2014 S/S", "Winner (band)"], "policy": "answer-bearing supporting sentence"}
+{"id": "e01", "role": "easy", "hotpot_id": "5a7c465a5542990527d5547f", "answer": "David Starkey", "titles": ["The Churchills (TV series)", "David Starkey"], "policy": "answer-bearing supporting sentence"}
+{"id": "e02", "role": "easy", "hotpot_id": "5adf39d55542992d7e9f92e6", "answer": "Romantic", "titles": ["Heinrich Marschner", "Carl Maria von Weber"], "policy": "answer-bearing supporting sentence"}
+{"id": "e03", "role": "easy", "hotpot_id": "5abd0077554299700f9d7954", "answer": "United States House of Representatives", "titles": ["Lafe Pence", "United States House of Representatives"], "policy": "answer-bearing supporting sentence"}
+{"id": "e04", "role": "easy", "hotpot_id": "5ab2d61155429916697740ff", "answer": "photographer", "titles": ["Howell Conant", "Grace Kelly"], "policy": "answer-bearing supporting sentence"}
+{"id": "m01", "role": "multi", "hotpot_id": "5a8e3ea95542995a26add48d", "answer": "Greenwich Village, New York City", "titles": ["Big Stone Gap (film)", "Adriana Trigiani"], "policy": "both supporting sentences"}
+{"id": "m02", "role": "multi", "hotpot_id": "5a87ab905542996e4f3088c1", "answer": "3,677 seated", "titles": ["Lewiston Maineiacs", "Androscoggin Bank Colisée"], "policy": "both supporting sentences"}
+{"id": "z01", "role": "abstain", "hotpot_id": null, "answer": null, "titles": [], "policy": "off corpus"}
+{"id": "z02", "role": "abstain", "hotpot_id": null, "answer": null, "titles": [], "policy": "off corpus"}
+{"id": "z03", "role": "abstain", "hotpot_id": null, "answer": null, "titles": [], "policy": "off corpus"}
+{"id": "z04", "role": "abstain", "hotpot_id": null, "answer": null, "titles": [], "policy": "off corpus"}
+{"id": "z05", "role": "abstain", "hotpot_id": null, "answer": null, "titles": [], "policy": "off corpus"}
+{"id": "z06", "role": "abstain", "hotpot_id": null, "answer": null, "titles": [], "policy": "off corpus"}
