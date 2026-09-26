@@ -176,11 +176,11 @@
 <section class="cover" id="result">
   <p class="eyebrow">100 questions · 1,000 documents each</p>
   <h1><em>Jev</em> picks the documents. One call answers.</h1>
-  <p class="deck">On BrowseComp-Plus, the Jev screen picks 8 of 1,000 documents and one Sonnet 5 call answers from them. This reader matches the accuracy of a Sonnet 5 Recursive Language Model, or RLM, at $0.13 per question instead of $0.35, and 21 seconds instead of 143.</p>
+  <p class="deck">On BrowseComp-Plus, the Jev screen picks 8 of 1,000 documents and one Sonnet 5 call answers from them. This Jev reader matches the accuracy of a Sonnet 5 Recursive Language Model, or RLM, at $0.13 per question instead of $0.35, and 21 seconds instead of 143.</p>
   <div class="figures">
     <article>
       <strong>0.94</strong>
-      <span>Accuracy, Jev-first reader</span>
+      <span>Accuracy, Jev reader</span>
     </article>
     <article>
       <strong>$0.13</strong>
@@ -195,8 +195,8 @@
 
 <main>
   <section id="arms">
-    <h2>The three arms</h2>
-    <p class="lede">Every question comes with 1,000 BrowseComp-Plus documents, about 7 to 9 million tokens, including its gold and evidence documents. Sonnet 5 is the root model, Haiku 4.5 answers sub-calls, and a Sonnet 5 judge scores each answer. We call a difference only when the whole 95% paired bootstrap interval sits on one side of zero.</p>
+    <h2>The three methods</h2>
+    <p class="lede">Every question comes with 1,000 BrowseComp-Plus documents, about 7 to 9 million tokens. A few of them hold the answer and the facts behind its clues; the rest are random. A Sonnet 5 judge marks each answer right or wrong against the benchmark's answer. We call one method better only when the 95% confidence interval for the difference, over the same questions, is entirely above or below zero.</p>
     <p class="lede">Jev is used in two ways. Take a made-up question: <i>which painter failed an art school's entrance exam and later taught there?</i></p>
     <ul class="points">
       <li><b>Jev screen</b> scores each document for how likely it is to help answer the question. A biography of a painter who taught at an art school might score 0.9, and a football match report 0.01.</li>
@@ -205,9 +205,9 @@
     <div class="looks">
       <article class="look">
         <div>
-          <div class="mark">RLM arm A, plain</div>
-          <h3>Sonnet searches in a REPL.</h3>
-          <p>Sonnet 5 writes Python over the documents and sends sub-questions to Haiku. It stops at an answer or at the turn cap. It never calls Jev.</p>
+          <div class="mark">Plain RLM</div>
+          <h3>Sonnet searches with code.</h3>
+          <p>Sonnet 5 gets the documents in a Python session, writes code to search them, and hands pieces to Haiku 4.5 to read. It stops when it answers or runs out of turns. It never calls Jev.</p>
         </div>
         <div class="metrics">
           <div><b>0.91</b><small>Accuracy</small></div>
@@ -217,9 +217,9 @@
       </article>
       <article class="look">
         <div>
-          <div class="mark">RLM arm B, Jev tools</div>
+          <div class="mark">RLM with Jev tools</div>
           <h3>The same RLM, with Jev as tools.</h3>
-          <p>Sonnet can also call Jev screen and Jev decide from its code. Each Jev call uses up one of Sonnet's limited turns, so arm B costs more for the same accuracy.</p>
+          <p>Sonnet can also call Jev screen and Jev decide from its code. Each Jev call uses up one of Sonnet's limited turns, so this method costs more for the same accuracy.</p>
         </div>
         <div class="metrics">
           <div><b>0.90</b><small>Accuracy</small></div>
@@ -229,7 +229,7 @@
       </article>
       <article class="look featured">
         <div>
-          <div class="mark">Reader arm J, Jev-first</div>
+          <div class="mark">Jev reader</div>
           <h3>Jev screens, then one call.</h3>
           <p>Jev scores all 1,000 documents. The top 8 go to a single Sonnet 5 call. There is no search loop.</p>
         </div>
@@ -240,7 +240,7 @@
         </div>
       </article>
     </div>
-    <p class="note">Reader arm J scored 3 points above RLM arm A on the fixed setup described below, with a 95% interval of −3 to +9, so the difference is not clear. On the first setup both scored 0.94. On the 30 held-out questions both were run on, where no document supports an answer, RLM arm A declined 19 and reader arm J declined 25. Asked to state a confidence, RLM arm A never said 50% or more; reader arm J did twice, once answering from memory and once wrong.</p>
+    <p class="note">The Jev reader scored 3 points above the plain RLM on the fixed setup described below, with a 95% interval of −3 to +9, so the difference is not clear. On the first setup both scored 0.94. We also ran held-out questions: questions whose answer documents we removed, so the right move is to decline. On the 30 both methods ran, the plain RLM declined 19 and the Jev reader 25. Asked to state a confidence, the plain RLM never said 50% or more; the Jev reader did twice, once answering from memory and once wrong.</p>
   </section>
 
   <section id="baseline">
@@ -259,7 +259,7 @@
       </table>
     </div>
     <ul class="points">
-      <li>These are context, not a head-to-head. The paper used its own 150 questions, GPT-5, and a GPT-4.1 judge. We drew our own questions, ran Sonnet 5, and used a Sonnet 5 judge, so our scores cannot be ranked against these.</li>
+      <li>These are context, not a head-to-head. The paper and this study each drew 150 questions at random from the same 830. The paper did not publish its list, so we do not know how many questions overlap, and the random filler documents differ too. The paper also ran GPT-5 with a GPT-4.1 judge, where we ran Sonnet 5 with a Sonnet 5 judge. So our scores cannot be ranked against these.</li>
       <li>The public BrowseComp-Plus leaderboard searches a 100,000-document corpus instead, so we do not compare against it.</li>
     </ul>
   </section>
@@ -271,15 +271,15 @@
         <span class="num">01</span>
         <div>
           <h3>Jev tools lost the first main run.</h3>
-          <p>With a limit of 20 turns on 100 questions, RLM arm B scored 0.84 against arm A's 0.94, p = 0.002, and cost $0.34 against $0.30. Each Jev call used up a turn, so arm B ran out of turns more often.</p>
+          <p>With a limit of 20 turns on 100 questions, the RLM with Jev tools scored 0.84 against the plain RLM's 0.94 (p = 0.002, so very unlikely to be chance) and cost $0.34 against $0.30. Each Jev call used up a turn, so it ran out of turns more often.</p>
         </div>
-        <span class="tag loss">Arm B worse</span>
+        <span class="tag loss">Jev tools worse</span>
       </li>
       <li>
         <span class="num">02</span>
         <div>
           <h3>The Jev check lost on the main questions.</h3>
-          <p>The Jev check runs Jev decide on the documents an answer cites, to ask whether they support it. On RLM arm A's answers it ranked errors worse than Sonnet's stated confidence, with an AUROC of 0.87 against 0.93.</p>
+          <p>The Jev check runs Jev decide on the documents an answer cites, to ask whether they support it. Sonnet also states its own confidence with each answer. We measured how well each score separates wrong answers from right ones with AUROC, where 1.0 is perfect and 0.5 is a coin flip. On the plain RLM's answers, the Jev check scored 0.87 and Sonnet's stated confidence 0.93.</p>
         </div>
         <span class="tag loss">Stated confidence wins</span>
       </li>
@@ -287,7 +287,7 @@
         <span class="num">03</span>
         <div>
           <h3>A one-call shortlist tool fixed part of it.</h3>
-          <p>On the 22 questions where arm B hit the cap, RLM arm B2 with the shortlist tool got 13 right. The original arm B got 7, and arm A got 17.</p>
+          <p>We replaced Jev screen with a shortlist tool that screens every document and returns the top few in one call, to save turns. On the 22 questions where the RLM with Jev tools ran out of turns, this version got 13 right. The original got 7, and the plain RLM got 17.</p>
         </div>
         <span class="tag loss">Partial fix</span>
       </li>
@@ -295,23 +295,23 @@
         <span class="num">04</span>
         <div>
           <h3>Fixing the run setup closed most of the gap.</h3>
-          <p>The fix allows 30 turns and, when turns run out, tells Sonnet to stop writing code and answer. Arm A scored 0.91 and arm B 0.90, at $0.35 and $0.42 per question. The Jev tools still added cost.</p>
+          <p>The fix allows 30 turns and, when turns run out, tells Sonnet to stop writing code and answer. The plain RLM scored 0.91 and the RLM with Jev tools 0.90, at $0.35 and $0.42 per question. The Jev tools still added cost.</p>
         </div>
-        <span class="tag loss">Tie, B costs more</span>
+        <span class="tag loss">Tie, Jev tools cost more</span>
       </li>
       <li>
         <span class="num">05</span>
         <div>
-          <h3>A probe of reader arm J.</h3>
-          <p>On 30 random questions, reader arm J scored 0.87 against arm A's 0.90, at $0.13 against $0.33 and 19 s against 139 s. On 15 hard questions both scored 0.80. With only 30 questions, the interval still allowed a loss of about 17 points.</p>
+          <h3>A small trial of the Jev reader.</h3>
+          <p>On 30 random questions, the Jev reader scored 0.87 against the plain RLM's 0.90, at $0.13 against $0.33 and 19 s against 139 s. On 15 hard questions, where an RLM had run out of turns in the first setup, both scored 0.80. With only 30 questions, the interval still allowed a loss of about 17 points.</p>
         </div>
-        <span class="tag">Probe</span>
+        <span class="tag">Trial</span>
       </li>
       <li>
         <span class="num">06</span>
         <div>
-          <h3>Reader arm J on all 100 questions.</h3>
-          <p>Reader arm J scored 0.94 against arm A's 0.91, at $0.13 against $0.35 per question and 21 s against 143 s. The 62 questions outside the probe show the same pattern. When none of the top 8 documents is relevant, the reader says the documents cannot settle the question.</p>
+          <h3>The Jev reader on all 100 questions.</h3>
+          <p>The Jev reader scored 0.94 against the plain RLM's 0.91, at $0.13 against $0.35 per question and 21 s against 143 s. The 62 questions outside the trial show the same pattern. When none of the top 8 documents is relevant, the reader says the documents cannot settle the question.</p>
         </div>
         <span class="tag win">Cheaper and faster</span>
       </li>
@@ -319,7 +319,7 @@
         <span class="num">07</span>
         <div>
           <h3>Sonnet declines on its own when nothing supports an answer.</h3>
-          <p>Over arm A's 100 answers plus 20 held-out questions, the Jev check had an AUROC of 0.910 against 0.955 for stated confidence. The AURC difference was +0.016, with a 95% interval of +0.003 to +0.037. With 30 held-out questions the AUROCs were 0.912 and 0.958. On all 30, arm A declined or stated under 50% confidence.</p>
+          <p>Over the plain RLM's 100 answers plus 20 held-out questions, the Jev check had an AUROC of 0.910 against 0.955 for stated confidence, and the 95% interval favored stated confidence. With 30 held-out questions the AUROCs were 0.912 and 0.958. On all 30, the plain RLM declined or stated under 50% confidence, so the Jev check had little to catch.</p>
         </div>
         <span class="tag loss">Stated confidence wins</span>
       </li>
@@ -327,7 +327,7 @@
         <span class="num">08</span>
         <div>
           <h3>The Jev screen is why one call is enough.</h3>
-          <p>This check needed no API calls. BM25's top 8 held a gold document on 49 of 100 questions, and the Jev screen's top 8 on 94. BrowseComp questions describe the answer through indirect clues, which keyword ranking misses. We did not run a BM25 reader or an embedding retriever.</p>
+          <p>This check needed no API calls. BM25, a standard keyword ranking, put a document holding the answer in its top 8 on 49 of 100 questions. Jev screen did on 94. BrowseComp questions describe the answer through indirect clues, which keyword ranking misses. We did not run a reader on BM25's top 8, or an embedding retriever.</p>
         </div>
         <span class="tag win">Jev screen wins</span>
       </li>
@@ -336,14 +336,14 @@
 
   <section id="harness">
     <h2>The run setup, not Jev, caused most of the gap</h2>
-    <p class="lede">The run setup is the code that drives the RLM: how many turns Sonnet gets and what happens when they run out. In the first setup, Sonnet had 20 turns, and its last message was often more code instead of an answer, which counted as no answer. The fixed setup gives 30 turns, and the last turn tells Sonnet to answer from what it has found, without code. Below are the same 100 questions on both. RLM arm A is the plain RLM, and arm B adds the Jev tools.</p>
+    <p class="lede">The run setup is the code that drives the RLM: how many turns Sonnet gets and what happens when they run out. In the first setup, Sonnet had 20 turns, and its last message was often more code instead of an answer, which counted as no answer. The fixed setup gives 30 turns, and the last turn tells Sonnet to answer from what it has found, without code. Below are the same 100 questions on both.</p>
     <div class="tables">
       <table class="compare">
         <caption>First setup, 20 turns</caption>
-        <thead><tr><th></th><th class="num">Arm A</th><th class="num">Arm B</th></tr></thead>
+        <thead><tr><th></th><th class="num">Plain RLM</th><th class="num">With Jev tools</th></tr></thead>
         <tbody>
           <tr><th scope="row">Accuracy</th><td class="num">0.94</td><td class="num">0.84</td></tr>
-          <tr><th scope="row">Hit the turn cap</th><td class="num">17</td><td class="num">22</td></tr>
+          <tr><th scope="row">Ran out of turns</th><td class="num">17</td><td class="num">22</td></tr>
           <tr><th scope="row">No answer</th><td class="num">7</td><td class="num">14</td></tr>
           <tr><th scope="row">Cost per question</th><td class="num">$0.30</td><td class="num">$0.34</td></tr>
           <tr><th scope="row">Time per question</th><td class="num">132 s</td><td class="num">142 s</td></tr>
@@ -351,11 +351,11 @@
       </table>
       <table class="compare">
         <caption>Fixed setup, 30 turns and a last turn that must answer</caption>
-        <thead><tr><th></th><th class="num">Arm A</th><th class="num">Arm B</th></tr></thead>
+        <thead><tr><th></th><th class="num">Plain RLM</th><th class="num">With Jev tools</th></tr></thead>
         <tbody>
           <tr><th scope="row">Accuracy</th><td class="num">0.91</td><td class="num">0.90</td></tr>
-          <tr><th scope="row">Hit the turn cap</th><td class="num">8</td><td class="num">9</td></tr>
-          <tr><th scope="row">Token-limit stops</th><td class="num">3</td><td class="num">6</td></tr>
+          <tr><th scope="row">Ran out of turns</th><td class="num">8</td><td class="num">9</td></tr>
+          <tr><th scope="row">Hit the token budget</th><td class="num">3</td><td class="num">6</td></tr>
           <tr><th scope="row">No answer</th><td class="num">6</td><td class="num">8</td></tr>
           <tr><th scope="row">Cost per question</th><td class="num">$0.35</td><td class="num">$0.42</td></tr>
           <tr><th scope="row">Time per question</th><td class="num">143 s</td><td class="num">152 s</td></tr>
@@ -363,9 +363,9 @@
       </table>
     </div>
     <ul class="points">
-      <li>The fixed setup moved arm B from 10 points behind arm A to 1 point behind.</li>
+      <li>The fixed setup moved the RLM with Jev tools from 10 points behind the plain RLM to 1 point behind.</li>
       <li>The Jev tools still cost more, $0.42 per question against $0.35.</li>
-      <li>On the 22 questions where arm B ran out of turns in the first setup, arm A got 17 right and arm B got 7 in that setup. The one-call shortlist got 13 at $0.66 each, and arm B in the fixed setup got 13 at $1.01 each.</li>
+      <li>On the 22 questions where the RLM with Jev tools ran out of turns in the first setup, the plain RLM got 17 right and the Jev-tools version 7 in that setup. The shortlist version got 13 at $0.66 each, and the Jev-tools version in the fixed setup got 13 at $1.01 each.</li>
       <li>Rerunning the same questions moves the count by about 3 either way.</li>
       <li>The whole study cost $208, and Jev was $18 of it, or 9%.</li>
     </ul>
@@ -373,7 +373,7 @@
   <section id="limits">
     <h2>Limitations</h2>
     <ul class="points">
-      <li><b>Scale.</b> Jev screen scores every document, so its cost grows with the number of documents. At 1,000 documents it was $0.09 of the reader's $0.13 per question. At 100,000 documents it would be about $9. A larger corpus needs a cheap first search, by keywords or embeddings, to cut it to about 1,000 documents before Jev. Jev can only pick from what that search keeps, and we have not tested this at that scale.</li>
+      <li><b>Scale.</b> Jev screen scores every document, so its cost grows with the number of documents. At 1,000 documents it was $0.09 of the Jev reader's $0.13 per question. At 100,000 documents it would be about $9. A larger corpus needs a cheap first search, by keywords or embeddings, to cut it to about 1,000 documents before Jev. Jev can only pick from what that search keeps, and we have not tested this at that scale.</li>
       <li><b>An easy, small test.</b> Each question's 1,000 documents always include its answer documents, and the rest are random. In a real corpus, many documents can look close to the answer, which would make both searching and screening harder. The sample is also small: 100 main and 30 to 50 held-out questions, one run each, scored by a Sonnet 5 judge. Rerunning moves counts by about 3.</li>
       <li><b>No other retriever.</b> We compared Jev screen with BM25 keyword ranking only. An embedding retriever might also put the answer documents in the top 8.</li>
     </ul>
