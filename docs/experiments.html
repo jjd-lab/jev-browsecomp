@@ -124,7 +124,8 @@
   .step { padding: 0.15rem 0.6rem; border: 1px solid var(--line); border-radius: 999px; background: var(--surface); white-space: nowrap; }
   .step.jev { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); font-weight: 500; }
   .arrow { color: var(--muted); }
-  .held { margin-top: 1.5rem; }
+  .held, .flag { margin-top: 1.5rem; }
+  .compare.flag thead th { white-space: normal; }
   .compare.held td, .compare.held thead th { width: 3.4rem; padding-left: 0.25rem; padding-right: 0.25rem; white-space: normal; }
   .held .group th { padding: 1.4rem 0 0.4rem; font-size: 0.8rem; font-weight: 600; color: var(--muted); border-bottom: 1px solid var(--line); }
   .held td.ideal, .held th.ideal { color: var(--muted); font-weight: 400; }
@@ -280,8 +281,23 @@
     <ul class="points">
       <li>The Jev reader declined 25 of 30 against 19, and 37 of all 50, taking 16 seconds instead of 4.6 minutes.</li>
       <li>Its two confident answers came from Sonnet filling a gap from memory, since one call over 8 documents cannot search further. The Jev check caught one (0.06) and missed the other (0.55). On the same two, the plain RLM said 45% on one and searched, found nothing, and declined on the other.</li>
-      <li>Which number better flags a wrong answer: the confidence Sonnet writes in its own answer, or the Jev check's probability that the cited documents support it? We scored both with AUROC, where higher is better, 1.0 is perfect, and 0.5 is a coin flip. On the plain RLM's 100 answers, Sonnet scored 0.93 and the Jev check 0.87. With the 30 held-out questions added, 0.96 and 0.91. Two likely reasons: Sonnet rarely answers confidently without support, so the check has little to catch, and Sonnet's confidence can draw on what it knows from memory, while the Jev check sees only the cited documents.</li>
       <li><b>Abstaining with Jev, partly tested:</b> with Jev's top 8 in front of it, Sonnet declined more often, as shown above. Not yet tested is declining on Jev's scores alone. Jev screen gives each document a probability that it supports the question. If even the top 8 all score low, the Jev reader could decline before Sonnet is called.</li>
+    </ul>
+  </section>
+
+  <section id="flagging">
+    <h2>Flagging wrong answers: Jev check and Sonnet's confidence</h2>
+    <p class="lede">Every answer gets two numbers: the confidence Sonnet writes in its answer, and the Jev check's probability that the cited documents support it. A good flag gives wrong answers the lower number.</p>
+    <table class="compare flag">
+      <caption>The plain RLM's answers to the 100 main questions, 9 of them wrong</caption>
+      <thead><tr><th></th><th class="num">Sonnet's confidence</th><th class="num">Jev check</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">AUROC, higher is better, 0.5 is a coin flip</th><td class="num">0.93</td><td class="num">0.87</td></tr>
+      </tbody>
+    </table>
+    <ul class="points">
+      <li>Both flag wrong answers well. Sonnet's confidence did a little better, but with only 9 wrong answers, one that both rated highly accounts for most of the gap.</li>
+      <li>AUROC cannot be computed on the held-out questions, because every answer there is wrong: no document supports it. What we can count is how many answers each flag scored below 0.5. Across both methods' 13 held-out answers, the Jev check flagged 12 and Sonnet's confidence 11. The one difference was an answer from memory that Sonnet was 55% sure of and the Jev check scored 0.06.</li>
     </ul>
   </section>
 
